@@ -4,19 +4,19 @@
 
 import Route from './Route';
 
-class Router<Context extends any[]> {
-  #routes: Route<Context, any>[] = [];
+class Router<C extends any[]> {
+  routes: Route<C, any>[] = [];
 
-  addRoute<Parameters extends Partial<Record<string, string>>>(path: string): Route<Context, Parameters> {
-    const route = new Route<Context, Parameters>(path);
+  addRoute<P extends Partial<Record<string, string>>>(path: string): Route<C, P> {
+    const route = new Route<C, P>(path);
 
-    this.#routes.push(route);
+    this.routes.push(route);
 
     return route;
   }
 
-  async test(context: Context, method: string, url: string): Promise<boolean> {
-    for (const route of this.#routes) {
+  async test(context: C, method: string, url: URL | string): Promise<boolean> {
+    for (const route of this.routes) {
       if (await route.test(context, method, url)) {
         return true;
       }

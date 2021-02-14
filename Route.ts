@@ -4,61 +4,61 @@
 
 import pathToRegExp from './pathToRegExp';
 
-class Route<Context extends any[], Parameters extends Partial<Record<string, string>>> {
-  #path: RegExp;
+class Route<C extends any[], P extends Partial<Record<string, string>>> {
+  path: RegExp;
 
-  #routes: [method: string, _1: (parameters: Parameters, ...context: Context) => Promise<void>][] = [];
+  routes: [method: string, _1: (parameters: P, ...context: C) => Promise<void>][] = [];
 
   constructor(path: string) {
-    this.#path = pathToRegExp(path);
+    this.path = pathToRegExp(path);
   }
 
-  addRoute(method: string, _1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
-    this.#routes.push([method, _1]);
+  addRoute(method: string, _1: this['routes'][number][1]): this {
+    this.routes.push([method, _1]);
 
     return this;
   }
 
-  delete(_1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
+  delete(_1: this['routes'][number][1]): this {
     this.addRoute('DELETE', _1);
 
     return this;
   }
 
-  get(_1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
+  get(_1: this['routes'][number][1]): this {
     this.addRoute('GET', _1);
 
     return this;
   }
 
-  patch(_1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
+  patch(_1: this['routes'][number][1]): this {
     this.addRoute('PATCH', _1);
 
     return this;
   }
 
-  post(_1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
+  post(_1: this['routes'][number][1]): this {
     this.addRoute('POST', _1);
 
     return this;
   }
 
-  put(_1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
+  put(_1: this['routes'][number][1]): this {
     this.addRoute('PUT', _1);
 
     return this;
   }
 
-  async test(context: Context, method: string, url: URL | string): Promise<boolean> {
+  async test(context: C, method: string, url: URL | string): Promise<boolean> {
     if (typeof url === 'string') {
       url = new URL(url, 'file://');
     }
 
-    for (const route of this.#routes) {
-      if (route[0] === method && this.#path.test(url.pathname)) {
-        const parameters = url.pathname.match(this.#path)?.groups || {};
+    for (const [_1, _2] of this.routes) {
+      if (_1 === method && this.path.test(url.pathname)) {
+        const parameters = url.pathname.match(this.path)?.groups || {};
 
-        await route[1](parameters as Parameters, ...context);
+        await _2(parameters as P, ...context);
 
         return true;
       }
