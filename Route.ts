@@ -54,13 +54,15 @@ class Route<C extends any[], P extends Partial<Record<string, string>>> {
       url = new URL(url, 'file://');
     }
 
-    for (const child of this.children) {
-      if (child[0] === method && this.path.test(url.pathname)) {
-        const parameters = url.pathname.match(this.path)?.groups || {};
+    if (this.path.test(url.pathname)) {
+      for (const child of this.children) {
+        if (child[0] === method) {
+          const parameters = url.pathname.match(this.path)?.groups || {};
 
-        await child[1](parameters as P, ...context);
+          await child[1](parameters as P, ...context);
 
-        return true;
+          return true;
+        }
       }
     }
 
