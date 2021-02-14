@@ -5,6 +5,7 @@
     "esModuleInterop": true,
     "module": "UMD",
     "moduleResolution": "Node",
+    "outDir": "./compiled",
     "strict": true,
     "target": "ES2020"
   }
