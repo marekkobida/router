@@ -1,3 +1,5 @@
+`npm i warden-sk/router#compiled`
+
 ```ts
 import Router from './Router';
 
