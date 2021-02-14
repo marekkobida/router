@@ -2,23 +2,29 @@
 /*
  * Copyright 2021 Marek Kobida
  */
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, privateMap) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to get private field on non-instance");
+    }
+    return privateMap.get(receiver);
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _routes;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Route_1 = __importDefault(require("./Route"));
 class Router {
     constructor() {
-        this.#routes = [];
+        _routes.set(this, []);
     }
-    #routes;
     addRoute(path) {
         const route = new Route_1.default(path);
-        this.#routes.push(route);
+        __classPrivateFieldGet(this, _routes).push(route);
         return route;
     }
     async test(context, method, url) {
-        for (const route of this.#routes) {
+        for (const route of __classPrivateFieldGet(this, _routes)) {
             if (await route.test(context, method, url)) {
                 return true;
             }
@@ -26,4 +32,5 @@ class Router {
         return false;
     }
 }
+_routes = new WeakMap();
 exports.default = Router;

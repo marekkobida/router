@@ -6,6 +6,6 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "strict": true,
-    "target": "ESNext"
+    "target": "ES2020"
   }
 }
