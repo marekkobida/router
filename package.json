@@ -1,4 +1,7 @@
 {
+  "devDependencies": {
+    "typescript": "^4.1.5"
+  },
   "name": "router",
   "version": "1.0.0"
 }
