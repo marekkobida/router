@@ -5,46 +5,46 @@
 import pathToRegExp from './pathToRegExp';
 
 class Route<C extends any[], P extends Partial<Record<string, string>>> {
-  path: RegExp;
+  children: [method: string, _1: (parameters: P, ...context: C) => Promise<void>][] = [];
 
-  routes: [method: string, _1: (parameters: P, ...context: C) => Promise<void>][] = [];
+  path: RegExp;
 
   constructor(path: string) {
     this.path = pathToRegExp(path);
   }
 
-  addRoute(method: string, _1: this['routes'][number][1]): this {
-    this.routes.push([method, _1]);
+  addChild(method: string, _1: this['children'][number][1]): this {
+    this.children.push([method, _1]);
 
     return this;
   }
 
-  delete(_1: this['routes'][number][1]): this {
-    this.addRoute('DELETE', _1);
+  delete(_1: this['children'][number][1]): this {
+    this.addChild('DELETE', _1);
 
     return this;
   }
 
-  get(_1: this['routes'][number][1]): this {
-    this.addRoute('GET', _1);
+  get(_1: this['children'][number][1]): this {
+    this.addChild('GET', _1);
 
     return this;
   }
 
-  patch(_1: this['routes'][number][1]): this {
-    this.addRoute('PATCH', _1);
+  patch(_1: this['children'][number][1]): this {
+    this.addChild('PATCH', _1);
 
     return this;
   }
 
-  post(_1: this['routes'][number][1]): this {
-    this.addRoute('POST', _1);
+  post(_1: this['children'][number][1]): this {
+    this.addChild('POST', _1);
 
     return this;
   }
 
-  put(_1: this['routes'][number][1]): this {
-    this.addRoute('PUT', _1);
+  put(_1: this['children'][number][1]): this {
+    this.addChild('PUT', _1);
 
     return this;
   }
@@ -54,11 +54,11 @@ class Route<C extends any[], P extends Partial<Record<string, string>>> {
       url = new URL(url, 'file://');
     }
 
-    for (const [_1, _2] of this.routes) {
-      if (_1 === method && this.path.test(url.pathname)) {
+    for (const child of this.children) {
+      if (child[0] === method && this.path.test(url.pathname)) {
         const parameters = url.pathname.match(this.path)?.groups || {};
 
-        await _2(parameters as P, ...context);
+        await child[1](parameters as P, ...context);
 
         return true;
       }
