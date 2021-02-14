@@ -4,7 +4,7 @@
 
 import Router from './Router';
 
-const router = new Router();
+const router = new Router<['👋']>();
 
 router.addRoute('/hello/:name').get(async ({ name }, $) => {
   console.log($, name); // 👋 marekkobida
