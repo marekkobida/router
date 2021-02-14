@@ -3,7 +3,7 @@
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "esModuleInterop": true,
-    "module": "CommonJS",
+    "module": "UMD",
     "moduleResolution": "Node",
     "strict": true,
     "target": "ES2020"

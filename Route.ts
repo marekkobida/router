@@ -13,32 +13,38 @@ class Route<Context extends any[], Parameters extends Partial<Record<string, str
     this.#path = pathToRegExp(path);
   }
 
+  addRoute(method: string, _1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
+    this.#routes.push([method, _1]);
+
+    return this;
+  }
+
   delete(_1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
-    this.#routes.push(['DELETE', _1]);
+    this.addRoute('DELETE', _1);
 
     return this;
   }
 
   get(_1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
-    this.#routes.push(['GET', _1]);
+    this.addRoute('GET', _1);
 
     return this;
   }
 
   patch(_1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
-    this.#routes.push(['PATCH', _1]);
+    this.addRoute('PATCH', _1);
 
     return this;
   }
 
   post(_1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
-    this.#routes.push(['POST', _1]);
+    this.addRoute('POST', _1);
 
     return this;
   }
 
   put(_1: (parameters: Parameters, ...context: Context) => Promise<void>): this {
-    this.#routes.push(['PUT', _1]);
+    this.addRoute('PUT', _1);
 
     return this;
   }

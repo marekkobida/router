@@ -7,7 +7,7 @@ function pathToRegExp(path: string): RegExp {
   path = path.replace(/\//, '\\/');
 
   // from "\/:id" to "(?:\/(?<id>[^\/]+))"
-  path = path.replace(/\/:([^\/]+)/g, (..._1) => `(?:\\/(?<${_1[1]}>[^\\/]+))`);
+  path = path.replace(/\/:([^\/]+)/g, (..._1) => '(?:\\/(?<' + _1[1] + '>[^\\/]+))');
 
   path = '^' + path + '\\/?' + '$';
 
