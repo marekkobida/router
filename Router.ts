@@ -24,6 +24,12 @@ class Router<C extends any[]> {
 
     return false;
   }
+
+  toJSON() {
+    return {
+      routes: this.routes.map(route => route.toJSON()),
+    };
+  }
 }
 
 export default Router;

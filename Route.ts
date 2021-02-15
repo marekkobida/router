@@ -7,10 +7,10 @@ import pathToRegExp from './pathToRegExp';
 class Route<C extends any[], P extends Partial<Record<string, string>>> {
   children: [method: string, _1: (parameters: P, ...context: C) => Promise<void>][] = [];
 
-  path: RegExp;
+  paths: [string, RegExp];
 
   constructor(path: string) {
-    this.path = pathToRegExp(path);
+    this.paths = [path, pathToRegExp(path)];
   }
 
   addChild(method: string, _1: this['children'][number][1]): this {
@@ -54,10 +54,10 @@ class Route<C extends any[], P extends Partial<Record<string, string>>> {
       url = new URL(url, 'file://');
     }
 
-    if (this.path.test(url.pathname)) {
+    if (this.paths[1].test(url.pathname)) {
       for (const child of this.children) {
         if (child[0] === method) {
-          const parameters = url.pathname.match(this.path)?.groups || {};
+          const parameters = url.pathname.match(this.paths[1])?.groups || {};
 
           await child[1](parameters as P, ...context);
 
@@ -67,6 +67,13 @@ class Route<C extends any[], P extends Partial<Record<string, string>>> {
     }
 
     return false;
+  }
+
+  toJSON() {
+    return {
+      children: this.children.map(child => child[0]),
+      paths: this.paths.map(path => path.toString()),
+    };
   }
 }
 
