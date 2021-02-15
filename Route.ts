@@ -21,7 +21,7 @@ class Route<C extends any[], P extends Partial<Record<string, string>>> {
   }
 
   addChild(_1: Child<C, P>['_1'], method: string): this {
-    this.#children.push({ method, _1 });
+    this.#children.push({ _1, method });
 
     return this;
   }

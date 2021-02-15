@@ -8,6 +8,7 @@ import Router from './Router';
 const router = new Router<['👋']>();
 
 router
+  //       | P
   .addRoute<{ name: string }>('/hello/:name')
   .assignName('hello')
   //          | P       | ...C
