@@ -4,25 +4,25 @@
 
 import Route from './Route';
 
-class Router<C extends any[]> {
-  #routes: Route<C, any>[] = [];
+class Router<C extends readonly any[]> {
+  #routes: Route<C>[] = [];
 
-  addRoute<P extends Partial<Record<string, string>>>(path: string): Route<C, P> {
-    const route = new Route<C, P>(path);
+  addRoute(path: string): Route<C> {
+    const route = new Route<C>(path);
 
     this.#routes.push(route);
 
     return route;
   }
 
-  async test(context: C, method: string, url: URL | string): Promise<boolean> {
+  async test(context: C, method: string, url: URL | string): Promise<any> {
     for (const route of this.#routes) {
-      if (await route.test(context, method, url)) {
-        return true;
+      const test = await route.test(context, method, url);
+
+      if (test) {
+        return test;
       }
     }
-
-    return false;
   }
 
   toJSON() {

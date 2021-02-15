@@ -1,6 +1,3 @@
-`npm i warden-sk/router#compiled`
-
-```tsx
 /*
  * Copyright 2021 Marek Kobida
  */
@@ -28,4 +25,3 @@ router.test(context, 'GET', '/hello/marekkobida').then($ => console.log($));
 router.addRoute('/react').get(async ({}, $) => <h1>{$}</h1>);
 
 router.test(context, 'GET', '/react').then($ => console.log($));
-```
