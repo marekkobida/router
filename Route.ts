@@ -4,47 +4,60 @@
 
 import pathToRegExp from './pathToRegExp';
 
-class Route<C extends any[], P extends Partial<Record<string, string>>> {
-  children: [method: string, _1: (parameters: P, ...context: C) => Promise<void>][] = [];
+interface Child<C extends any[], P extends Partial<Record<string, string>>> {
+  _1: (parameters: P, ...context: C) => Promise<void>;
+  method: string;
+}
 
-  paths: [string, RegExp];
+class Route<C extends any[], P extends Partial<Record<string, string>>> {
+  #children: Child<C, P>[] = [];
+
+  #name?: string;
+
+  #paths: [string, RegExp];
 
   constructor(path: string) {
-    this.paths = [path, pathToRegExp(path)];
+    this.#paths = [path, pathToRegExp(path)];
   }
 
-  addChild(method: string, _1: this['children'][number][1]): this {
-    this.children.push([method, _1]);
+  addChild(_1: Child<C, P>['_1'], method: string): this {
+    this.#children.push({ method, _1 });
 
     return this;
   }
 
-  delete(_1: this['children'][number][1]): this {
-    this.addChild('DELETE', _1);
+  assignName(name: string): this {
+    this.#name = name;
 
     return this;
   }
 
-  get(_1: this['children'][number][1]): this {
-    this.addChild('GET', _1);
+  delete(_1: Child<C, P>['_1']): this {
+    this.addChild(_1, 'DELETE');
 
     return this;
   }
 
-  patch(_1: this['children'][number][1]): this {
-    this.addChild('PATCH', _1);
+  get(_1: Child<C, P>['_1']): this {
+    this.addChild(_1, 'GET');
 
     return this;
   }
 
-  post(_1: this['children'][number][1]): this {
-    this.addChild('POST', _1);
+  patch(_1: Child<C, P>['_1']): this {
+    this.addChild(_1, 'PATCH');
 
     return this;
   }
 
-  put(_1: this['children'][number][1]): this {
-    this.addChild('PUT', _1);
+  post(_1: Child<C, P>['_1']): this {
+    this.addChild(_1, 'POST');
+
+    return this;
+  }
+
+  put(_1: Child<C, P>['_1']): this {
+    this.addChild(_1, 'PUT');
 
     return this;
   }
@@ -54,12 +67,12 @@ class Route<C extends any[], P extends Partial<Record<string, string>>> {
       url = new URL(url, 'file://');
     }
 
-    if (this.paths[1].test(url.pathname)) {
-      for (const child of this.children) {
-        if (child[0] === method) {
-          const parameters = url.pathname.match(this.paths[1])?.groups || {};
+    if (this.#paths[1].test(url.pathname)) {
+      for (const child of this.#children) {
+        if (child.method === method) {
+          const parameters = url.pathname.match(this.#paths[1])?.groups || {};
 
-          await child[1](parameters as P, ...context);
+          await child._1(parameters as P, ...context);
 
           return true;
         }
@@ -71,8 +84,9 @@ class Route<C extends any[], P extends Partial<Record<string, string>>> {
 
   toJSON() {
     return {
-      children: this.children.map(child => child[0]),
-      paths: this.paths.map(path => path.toString()),
+      children: this.#children.map(child => child.method),
+      name: this.#name,
+      paths: this.#paths.map(path => path.toString()),
     };
   }
 }
