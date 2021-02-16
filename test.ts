@@ -4,7 +4,7 @@
 
 import Router from './Router';
 
-const context = [`👋`] as const;
+const context = ['👋'] as const;
 
 //                       | C
 const router = new Router<typeof context>();
