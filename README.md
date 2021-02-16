@@ -1,10 +1,6 @@
 `npm i warden-sk/router#compiled`
 
 ```tsx
-/*
- * Copyright 2021 Marek Kobida
- */
-
 import Router from './Router';
 
 const context = ['👋'] as const;
