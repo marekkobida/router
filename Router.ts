@@ -15,7 +15,7 @@ class Router<C extends readonly any[]> {
     return route;
   }
 
-  async test(context: C, method: string, url: URL | string): Promise<any> {
+  async test(context: C, method: string, url: string): Promise<any> {
     for (const route of this.#routes) {
       const test = await route.test(context, method, url);
 
