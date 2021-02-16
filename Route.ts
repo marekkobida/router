@@ -60,14 +60,28 @@ class Route<C extends readonly any[]> {
     return this;
   }
 
-  async test(context: C, method: string, url: string): Promise<any> {
+  readChild(method: string): Child<C> | undefined {
+    return this.#children.find(child => child.method === method);
+  }
+
+  readParameters(url: string): Record<string, string> {
+    return url.match(this.#path[1])?.groups || {};
+  }
+
+  async test(context: C, method: string, url: string): Promise<boolean> {
     if (this.#path[1].test(url)) {
-      const child = this.#children.find(child => child.method === method);
+      const child = this.readChild(method);
 
-      const parameters = url.match(this.#path[1])?.groups || {};
+      if (child) {
+        const parameters = this.readParameters(url);
 
-      return child?.afterTest(parameters, ...context);
+        await child.afterTest(parameters, ...context);
+
+        return true;
+      }
     }
+
+    return false;
   }
 }
 

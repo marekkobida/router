@@ -15,14 +15,14 @@ class Router<C extends readonly any[]> {
     return route;
   }
 
-  async test(context: C, method: string, url: string): Promise<any> {
+  async test(context: C, method: string, url: string): Promise<boolean> {
     for (const route of this.#routes) {
-      const test = await route.test(context, method, url);
-
-      if (test) {
-        return test;
+      if (await route.test(context, method, url)) {
+        return true;
       }
     }
+
+    return false;
   }
 }
 
