@@ -1,6 +1,3 @@
-`npm i warden-sk/router#compiled`
-
-```tsx
 /*
  * Copyright 2021 Marek Kobida
  */
@@ -19,4 +16,3 @@ router
 
 //          | C
 router.test(context, 'GET', '/hello/marekkobida');
-```

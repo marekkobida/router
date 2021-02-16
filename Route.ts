@@ -5,7 +5,7 @@
 import pathToRegExp from './pathToRegExp';
 
 interface Child<C extends readonly any[]> {
-  afterTest: (parameters: Partial<Record<string, string>>, ...context: C) => Promise<any>;
+  afterTest: (parameters: Partial<Record<string, string>>, ...context: C) => any;
   method: string;
 }
 
@@ -68,14 +68,14 @@ class Route<C extends readonly any[]> {
     return url.match(this.#path[1])?.groups || {};
   }
 
-  async test(context: C, method: string, url: string): Promise<boolean> {
+  test(context: C, method: string, url: string): boolean {
     if (this.#path[1].test(url)) {
       const child = this.readChild(method);
 
       if (child) {
         const parameters = this.readParameters(url);
 
-        await child.afterTest(parameters, ...context);
+        child.afterTest(parameters, ...context);
 
         return true;
       }
