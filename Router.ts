@@ -24,12 +24,6 @@ class Router<C extends readonly any[]> {
       }
     }
   }
-
-  toJSON() {
-    return {
-      routes: this.#routes.map(route => route.toJSON()),
-    };
-  }
 }
 
 export default Router;

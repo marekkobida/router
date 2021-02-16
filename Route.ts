@@ -71,13 +71,6 @@ class Route<C extends readonly any[]> {
       }
     }
   }
-
-  toJSON() {
-    return {
-      children: this.#children.map(child => child.method),
-      paths: this.#paths.map(path => path.toString()),
-    };
-  }
 }
 
 export default Route;
