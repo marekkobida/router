@@ -5,70 +5,68 @@
 import pathToRegExp from './pathToRegExp';
 
 interface Child<C extends readonly any[]> {
-  _1: (parameters: Partial<Record<string, string>>, ...context: C) => Promise<any>;
+  afterTest: (parameters: Partial<Record<string, string>>, ...context: C) => Promise<any>;
   method: string;
 }
 
 class Route<C extends readonly any[]> {
   #children: Child<C>[] = [];
 
-  #paths: [string, RegExp];
+  #path: [string, RegExp];
 
   constructor(path: string) {
-    this.#paths = [path, pathToRegExp(path)];
+    this.#path = [path, pathToRegExp(path)];
   }
 
-  addChild({ _1, method }: Child<C>): this {
-    this.#children.push({ _1, method });
+  addChild({ afterTest, method }: Child<C>): this {
+    this.#children.push({ afterTest, method });
 
     return this;
   }
 
-  delete(_1: Child<C>['_1']): this {
-    this.addChild({ _1, method: 'DELETE' });
+  delete(afterTest: Child<C>['afterTest']): this {
+    this.addChild({ afterTest, method: 'DELETE' });
 
     return this;
   }
 
-  get(_1: Child<C>['_1']): this {
-    this.addChild({ _1, method: 'GET' });
+  get(afterTest: Child<C>['afterTest']): this {
+    this.addChild({ afterTest, method: 'GET' });
 
     return this;
   }
 
-  options(_1: Child<C>['_1']): this {
-    this.addChild({ _1, method: 'OPTIONS' });
+  options(afterTest: Child<C>['afterTest']): this {
+    this.addChild({ afterTest, method: 'OPTIONS' });
 
     return this;
   }
 
-  patch(_1: Child<C>['_1']): this {
-    this.addChild({ _1, method: 'PATCH' });
+  patch(afterTest: Child<C>['afterTest']): this {
+    this.addChild({ afterTest, method: 'PATCH' });
 
     return this;
   }
 
-  post(_1: Child<C>['_1']): this {
-    this.addChild({ _1, method: 'POST' });
+  post(afterTest: Child<C>['afterTest']): this {
+    this.addChild({ afterTest, method: 'POST' });
 
     return this;
   }
 
-  put(_1: Child<C>['_1']): this {
-    this.addChild({ _1, method: 'PUT' });
+  put(afterTest: Child<C>['afterTest']): this {
+    this.addChild({ afterTest, method: 'PUT' });
 
     return this;
   }
 
   async test(context: C, method: string, url: string): Promise<any> {
-    if (this.#paths[1].test(url)) {
-      for (const child of this.#children) {
-        if (child.method === method) {
-          const parameters = url.match(this.#paths[1])?.groups || {};
+    if (this.#path[1].test(url)) {
+      const child = this.#children.find(child => child.method === method);
 
-          return await child._1(parameters, ...context);
-        }
-      }
+      const parameters = url.match(this.#path[1])?.groups || {};
+
+      return child?.afterTest(parameters, ...context);
     }
   }
 }
