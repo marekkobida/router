@@ -4,15 +4,14 @@
 
 import Router from './Router';
 
-const context = ['👋'] as const;
+const context = ['👋'];
 
-//                       | C
 const router = new Router<typeof context>();
 
 router
   .addRoute('/hello/:name')
-  //              | ...C
-  .get(({ name }, $) => console.log(`${$} ${name}`) /* 👋 marekkobida */);
+  .get(({ name }, ...context) => console.log(`${context[0]} ${name}`) /* 👋 marekkobida */);
 
-//          | C
-router.test(context, 'GET', '/hello/marekkobida');
+router.assignContext(context);
+
+router.test('GET', '/hello/marekkobida');

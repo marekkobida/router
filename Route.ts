@@ -4,12 +4,12 @@
 
 import pathToRegExp from './pathToRegExp';
 
-interface Child<C extends readonly any[]> {
+interface Child<C extends any[]> {
   afterTest: (parameters: Partial<Record<string, string>>, ...context: C) => any;
   method: string;
 }
 
-class Route<C extends readonly any[]> {
+class Route<C extends any[]> {
   #children: Child<C>[] = [];
 
   #path: [string, RegExp];

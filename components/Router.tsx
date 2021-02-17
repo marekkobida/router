@@ -12,19 +12,21 @@ interface P {
 
 const router = new R<[(element: React.ReactNode) => any]>();
 
+function test() {
+  const url = location.hash.substring(1) || '/';
+
+  router.test('GET', url);
+}
+
 function Router({ children }: P) {
   const [element, writeElement] = React.useState<React.ReactNode>();
 
-  function test() {
-    const url = location.hash.substring(1) || '/';
-
-    router.test([writeElement], 'GET', url);
-  }
-
   React.useEffect(() => {
+    router.assignContext([writeElement]);
+
     test();
 
-    window.addEventListener('hashchange', test);
+    window.addEventListener('popstate', test);
   }, []);
 
   return (

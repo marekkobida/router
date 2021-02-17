@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import RouterContext from './RouterContext';
 
 interface P {
   children: React.ReactNode;
@@ -10,7 +11,17 @@ interface P {
 }
 
 function Link({ children, to }: P) {
-  return <a href={'#' + to}>{children}</a>;
+  const { router } = React.useContext(RouterContext);
+
+  function onClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    event.preventDefault();
+
+    history.pushState(null, '', `#${to}`);
+
+    router?.test('GET', to);
+  }
+
+  return <a onClick={onClick}>{children}</a>;
 }
 
 export default Link;

@@ -4,7 +4,9 @@
 
 import Route from './Route';
 
-class Router<C extends readonly any[]> {
+class Router<C extends any[]> {
+  #context?: C;
+
   #routes: Route<C>[] = [];
 
   addRoute(path: string): Route<C> {
@@ -15,14 +17,24 @@ class Router<C extends readonly any[]> {
     return route;
   }
 
-  test(context: C, method: string, url: string): boolean {
-    for (const route of this.#routes) {
-      if (route.test(context, method, url)) {
-        return true;
+  assignContext(context: C): this {
+    this.#context = context;
+
+    return this;
+  }
+
+  test(method: string, url: string): boolean {
+    if (this.#context) {
+      for (const route of this.#routes) {
+        if (route.test(this.#context, method, url)) {
+          return true;
+        }
       }
+
+      return false;
     }
 
-    return false;
+    throw new Error('The context does not exist.');
   }
 }
 
