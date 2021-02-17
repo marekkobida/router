@@ -1,5 +1,11 @@
 {
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
   "devDependencies": {
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
     "typescript": "^4.1.5"
   },
   "name": "@warden-sk/router",
