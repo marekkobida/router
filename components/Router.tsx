@@ -10,7 +10,7 @@ interface P {
   children: React.ReactNode;
 }
 
-const router = new R();
+const router = new R<[(element: React.ReactNode) => any]>();
 
 function Router({ children }: P) {
   const [element, writeElement] = React.useState<React.ReactNode>();
