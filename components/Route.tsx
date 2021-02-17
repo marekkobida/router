@@ -2,7 +2,7 @@
  * Copyright 2021 Marek Kobida
  */
 
-import React, { useContext } from 'react';
+import React from 'react';
 import RouterContext from './RouterContext';
 
 interface P {
@@ -11,7 +11,7 @@ interface P {
 }
 
 function Route({ children, path }: P) {
-  const { router } = useContext(RouterContext);
+  const { router } = React.useContext(RouterContext);
 
   router?.addRoute(path).get(({}, writeElement) => writeElement(children));
 
