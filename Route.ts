@@ -5,7 +5,7 @@
 import urlToRegExp from './urlToRegExp';
 
 interface Child<C extends any[]> {
-  afterTest: (parameters: Partial<Record<string, string>>, ...context: C) => any;
+  afterTest: (urlParameters: Partial<Record<string, string>>, ...context: C) => any;
   method: string;
 }
 
