@@ -4,39 +4,27 @@
 
 import Route from './Route';
 
-class Router<C extends any[]> {
+class Router<C extends unknown[]> {
   #context?: C;
 
   #routes: Route<C>[] = [];
 
-  addRoute(path: string): Route<C> {
-    const route = new Route<C>(path);
+  addRoute(url: string): Route<C> {
+    const route = new Route<C>(url);
 
     this.#routes.push(route);
 
     return route;
   }
 
-  assignContext(context: C): this {
+  assignContext(context?: C): this {
     this.#context = context;
 
     return this;
   }
 
-  test(method: string, url: string): boolean {
-    if (this.#context) {
-      for (const route of this.#routes) {
-        route.assignContext(this.#context);
-
-        if (route.test(method, url)) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    throw new Error('The context is not assigned.');
+  test(method: string, url: string): Route<C> | undefined {
+    return this.#routes.find(route => route.assignContext(this.#context).test(method, url));
   }
 }
 

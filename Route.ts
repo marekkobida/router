@@ -2,10 +2,10 @@
  * Copyright 2021 Marek Kobida
  */
 
-import pathToRegExp from './pathToRegExp';
+import urlToRegExp from './urlToRegExp';
 
 interface Child<C extends any[]> {
-  afterTest: (urlParameters: Partial<Record<string, string>>, ...context: C) => any;
+  afterTest: (parameters: Partial<Record<string, string>>, ...context: C) => any;
   method: string;
 }
 
@@ -14,10 +14,10 @@ class Route<C extends any[]> {
 
   #context?: C;
 
-  #path: [string, RegExp];
+  #url: [string, RegExp];
 
-  constructor(path: string) {
-    this.#path = [path, pathToRegExp(path)];
+  constructor(url: string) {
+    this.#url = [url, urlToRegExp(url)];
   }
 
   private addChild({ afterTest, method }: Child<C>): this {
@@ -26,7 +26,7 @@ class Route<C extends any[]> {
     return this;
   }
 
-  assignContext(context: C): this {
+  assignContext(context?: C): this {
     this.#context = context;
 
     return this;
@@ -56,10 +56,6 @@ class Route<C extends any[]> {
     return this;
   }
 
-  get path(): [string, RegExp] {
-    return this.#path;
-  }
-
   post(afterTest: Child<C>['afterTest']): this {
     this.addChild({ afterTest, method: 'POST' });
 
@@ -77,12 +73,12 @@ class Route<C extends any[]> {
   }
 
   private readUrlParameters(url: string): Partial<Record<string, string>> {
-    return url.match(this.#path[1])?.groups || {};
+    return url.match(this.#url[1])?.groups || {};
   }
 
-  test(method: string, url: string): boolean {
+  test(method: string, url: string): this | undefined {
     if (this.#context) {
-      if (this.#path[1].test(url)) {
+      if (this.#url[1].test(url)) {
         const child = this.readChild(method);
 
         if (child) {
@@ -90,14 +86,18 @@ class Route<C extends any[]> {
 
           child.afterTest(urlParameters, ...this.#context);
 
-          return true;
+          return this;
         }
       }
 
-      return false;
+      return;
     }
 
     throw new Error('The context is not assigned.');
+  }
+
+  get url(): [string, RegExp] {
+    return this.#url;
   }
 }
 
