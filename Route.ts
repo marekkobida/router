@@ -5,12 +5,14 @@
 import pathToRegExp from './pathToRegExp';
 
 interface Child<C extends any[]> {
-  afterTest: (parameters: Partial<Record<string, string>>, ...context: C) => any;
+  afterTest: (urlParameters: Partial<Record<string, string>>, ...context: C) => any;
   method: string;
 }
 
 class Route<C extends any[]> {
   #children: Child<C>[] = [];
+
+  #context?: C;
 
   #path: [string, RegExp];
 
@@ -18,8 +20,14 @@ class Route<C extends any[]> {
     this.#path = [path, pathToRegExp(path)];
   }
 
-  addChild({ afterTest, method }: Child<C>): this {
+  private addChild({ afterTest, method }: Child<C>): this {
     this.#children.push({ afterTest, method });
+
+    return this;
+  }
+
+  assignContext(context: C): this {
+    this.#context = context;
 
     return this;
   }
@@ -48,6 +56,10 @@ class Route<C extends any[]> {
     return this;
   }
 
+  get path(): [string, RegExp] {
+    return this.#path;
+  }
+
   post(afterTest: Child<C>['afterTest']): this {
     this.addChild({ afterTest, method: 'POST' });
 
@@ -60,28 +72,32 @@ class Route<C extends any[]> {
     return this;
   }
 
-  readChild(method: string): Child<C> | undefined {
+  private readChild(method: string): Child<C> | undefined {
     return this.#children.find(child => child.method === method);
   }
 
-  readParameters(url: string): Record<string, string> {
+  private readUrlParameters(url: string): Partial<Record<string, string>> {
     return url.match(this.#path[1])?.groups || {};
   }
 
-  test(context: C, method: string, url: string): boolean {
-    if (this.#path[1].test(url)) {
-      const child = this.readChild(method);
+  test(method: string, url: string): boolean {
+    if (this.#context) {
+      if (this.#path[1].test(url)) {
+        const child = this.readChild(method);
 
-      if (child) {
-        const parameters = this.readParameters(url);
+        if (child) {
+          const urlParameters = this.readUrlParameters(url);
 
-        child.afterTest(parameters, ...context);
+          child.afterTest(urlParameters, ...this.#context);
 
-        return true;
+          return true;
+        }
       }
+
+      return false;
     }
 
-    return false;
+    throw new Error('The context is not assigned.');
   }
 }
 

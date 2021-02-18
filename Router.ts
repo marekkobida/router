@@ -26,7 +26,9 @@ class Router<C extends any[]> {
   test(method: string, url: string): boolean {
     if (this.#context) {
       for (const route of this.#routes) {
-        if (route.test(this.#context, method, url)) {
+        route.assignContext(this.#context);
+
+        if (route.test(method, url)) {
           return true;
         }
       }
@@ -34,7 +36,7 @@ class Router<C extends any[]> {
       return false;
     }
 
-    throw new Error('The context does not exist.');
+    throw new Error('The context is not assigned.');
   }
 }
 
