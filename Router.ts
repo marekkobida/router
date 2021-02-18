@@ -3,7 +3,7 @@
  */
 
 import Route from './Route';
-import invariant from './invariant';
+import invariant from '@warden-sk/helpers/invariant';
 
 class Router<C extends any[]> {
   #context?: C;
@@ -21,20 +21,28 @@ class Router<C extends any[]> {
   }
 
   assignContext(context: C): this {
-    this.#context = context;
+    this.context = context;
 
     return this;
+  }
+
+  set context(context: C) {
+    this.#context = context;
   }
 
   get currentRoute(): Route<C> | undefined {
     return this.#currentRoute;
   }
 
+  get routes(): Route<C>[] {
+    return this.#routes;
+  }
+
   test(method: string, url: string): boolean {
     invariant(this.#context, 'The context is not assigned.');
 
     for (const route of this.#routes) {
-      route.assignContext(this.#context);
+      route.context = this.#context;
 
       if (route.test(method, url)) {
         this.#currentRoute = route;

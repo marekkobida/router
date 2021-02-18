@@ -4,7 +4,9 @@
 
 import Router from './Router';
 
-const router = new Router().assignContext(['👋']);
+const router = new Router();
+
+router.context = ['👋'];
 
 router
   .addRoute('/hello/:name')

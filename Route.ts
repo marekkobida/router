@@ -2,20 +2,23 @@
  * Copyright 2021 Marek Kobida
  */
 
-import invariant from './invariant';
+import invariant from '@warden-sk/helpers/invariant';
 import urlToRegExp from './urlToRegExp';
 
-interface Child<C extends any[]> {
-  afterTest: (urlParameters: Partial<Record<string, string>>, ...context: C) => any;
-  method: string;
+interface AfterTest<C extends any[]> {
+  (urlParameters: UrlParameters, ...context: C): any;
+}
+
+interface UrlParameters {
+  [name: string]: string;
 }
 
 class Route<C extends any[]> {
-  #children: Child<C>[] = [];
+  #children: [string, AfterTest<C>][] = [];
 
   #context?: C;
 
-  #currentUrlParameters: Partial<Record<string, string>> = {};
+  #currentUrlParameters: UrlParameters = {};
 
   #url: [string, RegExp];
 
@@ -23,59 +26,63 @@ class Route<C extends any[]> {
     this.#url = [url, urlToRegExp(url)];
   }
 
-  addChild({ afterTest, method }: Child<C>): this {
-    this.#children.push({ afterTest, method });
+  addChild(method: string, afterTest: AfterTest<C>): this {
+    this.#children.push([method, afterTest]);
 
     return this;
   }
 
   assignContext(context: C): this {
-    this.#context = context;
+    this.context = context;
 
     return this;
   }
 
-  get currentUrlParameters(): Partial<Record<string, string>> {
+  set context(context: C) {
+    this.#context = context;
+  }
+
+  get currentUrlParameters(): UrlParameters {
     return this.#currentUrlParameters;
   }
 
-  delete(afterTest: Child<C>['afterTest']): this {
-    this.addChild({ afterTest, method: 'DELETE' });
+  delete(afterTest: AfterTest<C>): this {
+    this.addChild('DELETE', afterTest);
 
     return this;
   }
 
-  get(afterTest: Child<C>['afterTest']): this {
-    this.addChild({ afterTest, method: 'GET' });
+  get(afterTest: AfterTest<C>): this {
+    this.addChild('GET', afterTest);
 
     return this;
   }
 
-  options(afterTest: Child<C>['afterTest']): this {
-    this.addChild({ afterTest, method: 'OPTIONS' });
+  options(afterTest: AfterTest<C>): this {
+    this.addChild('OPTIONS', afterTest);
 
     return this;
   }
 
-  patch(afterTest: Child<C>['afterTest']): this {
-    this.addChild({ afterTest, method: 'PATCH' });
+  patch(afterTest: AfterTest<C>): this {
+    this.addChild('PATCH', afterTest);
 
     return this;
   }
 
-  post(afterTest: Child<C>['afterTest']): this {
-    this.addChild({ afterTest, method: 'POST' });
+  post(afterTest: AfterTest<C>): this {
+    this.addChild('POST', afterTest);
 
     return this;
   }
 
-  put(afterTest: Child<C>['afterTest']): this {
-    this.addChild({ afterTest, method: 'PUT' });
+  put(afterTest: AfterTest<C>): this {
+    this.addChild('PUT', afterTest);
 
     return this;
   }
 
-  readUrlParameters(url: string): Partial<Record<string, string>> {
+  readUrlParameters(url: string): UrlParameters {
     return url.match(this.#url[1])?.groups || {};
   }
 
@@ -84,8 +91,8 @@ class Route<C extends any[]> {
 
     if (this.#url[1].test(url)) {
       for (const child of this.#children) {
-        if (child.method === method) {
-          child.afterTest((this.#currentUrlParameters = this.readUrlParameters(url)), ...this.#context);
+        if (child[0] === method) {
+          child[1]((this.#currentUrlParameters = this.readUrlParameters(url)), ...this.#context);
 
           return true;
         }
