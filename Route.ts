@@ -2,6 +2,7 @@
  * Copyright 2021 Marek Kobida
  */
 
+import invariant from './invariant';
 import urlToRegExp from './urlToRegExp';
 
 interface Child<C extends any[]> {
@@ -28,7 +29,7 @@ class Route<C extends any[]> {
     return this;
   }
 
-  assignContext(context?: C): this {
+  assignContext(context: C): this {
     this.#context = context;
 
     return this;
@@ -74,30 +75,24 @@ class Route<C extends any[]> {
     return this;
   }
 
-  readChild(method: string): Child<C> | undefined {
-    return this.#children.find(child => child.method === method);
-  }
-
   readUrlParameters(url: string): Partial<Record<string, string>> {
     return url.match(this.#url[1])?.groups || {};
   }
 
   test(method: string, url: string): boolean {
-    if (this.#context) {
-      if (this.#url[1].test(url)) {
-        const child = this.readChild(method);
+    invariant(this.#context, 'The context is not assigned.');
 
-        if (child) {
+    if (this.#url[1].test(url)) {
+      for (const child of this.#children) {
+        if (child.method === method) {
           child.afterTest((this.#currentUrlParameters = this.readUrlParameters(url)), ...this.#context);
 
           return true;
         }
       }
-
-      return false;
     }
 
-    throw new Error('The context is not assigned.');
+    return false;
   }
 
   get url(): [string, RegExp] {

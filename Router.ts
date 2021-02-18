@@ -3,8 +3,9 @@
  */
 
 import Route from './Route';
+import invariant from './invariant';
 
-class Router<C extends unknown[]> {
+class Router<C extends any[]> {
   #context?: C;
 
   #currentRoute?: Route<C>;
@@ -19,7 +20,7 @@ class Router<C extends unknown[]> {
     return route;
   }
 
-  assignContext(context?: C): this {
+  assignContext(context: C): this {
     this.#context = context;
 
     return this;
@@ -30,8 +31,12 @@ class Router<C extends unknown[]> {
   }
 
   test(method: string, url: string): boolean {
+    invariant(this.#context, 'The context is not assigned.');
+
     for (const route of this.#routes) {
-      if (route.assignContext(this.#context).test(method, url)) {
+      route.assignContext(this.#context);
+
+      if (route.test(method, url)) {
         this.#currentRoute = route;
 
         return true;
