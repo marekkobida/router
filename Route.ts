@@ -14,13 +14,15 @@ class Route<C extends any[]> {
 
   #context?: C;
 
+  #currentUrlParameters: Partial<Record<string, string>> = {};
+
   #url: [string, RegExp];
 
   constructor(url: string) {
     this.#url = [url, urlToRegExp(url)];
   }
 
-  private addChild({ afterTest, method }: Child<C>): this {
+  addChild({ afterTest, method }: Child<C>): this {
     this.#children.push({ afterTest, method });
 
     return this;
@@ -30,6 +32,10 @@ class Route<C extends any[]> {
     this.#context = context;
 
     return this;
+  }
+
+  get currentUrlParameters(): Partial<Record<string, string>> {
+    return this.#currentUrlParameters;
   }
 
   delete(afterTest: Child<C>['afterTest']): this {
@@ -68,29 +74,27 @@ class Route<C extends any[]> {
     return this;
   }
 
-  private readChild(method: string): Child<C> | undefined {
+  readChild(method: string): Child<C> | undefined {
     return this.#children.find(child => child.method === method);
   }
 
-  private readUrlParameters(url: string): Partial<Record<string, string>> {
+  readUrlParameters(url: string): Partial<Record<string, string>> {
     return url.match(this.#url[1])?.groups || {};
   }
 
-  test(method: string, url: string): this | undefined {
+  test(method: string, url: string): boolean {
     if (this.#context) {
       if (this.#url[1].test(url)) {
         const child = this.readChild(method);
 
         if (child) {
-          const urlParameters = this.readUrlParameters(url);
+          child.afterTest((this.#currentUrlParameters = this.readUrlParameters(url)), ...this.#context);
 
-          child.afterTest(urlParameters, ...this.#context);
-
-          return this;
+          return true;
         }
       }
 
-      return;
+      return false;
     }
 
     throw new Error('The context is not assigned.');
