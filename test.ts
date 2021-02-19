@@ -4,14 +4,28 @@
 
 import Router from './Router';
 
-const router = new Router();
+interface Request {
+  method: string;
+  url: string;
+}
 
-router.context = ['👋'];
+interface Response {
+  (response: any): any;
+}
 
-router
-  .addRoute('/hello/:name')
-  .get(({ name }, ...context) => console.log(`${context[0]} ${name}`) /* 👋 marekkobida */);
+interface Context {
+  request: Request;
+  response: Response;
+}
 
-router.test('GET', '/hello/marekkobida');
+const router = new Router<Context>();
 
-console.log(router.currentRoute?.currentUrlParameters);
+router.addRoute('/hello/:name').get(({ name }, { request, response }) => response(`👋 ${name} from ${request.url}`));
+
+function test(request: Request, response: Response) {
+  router.context = { request, response };
+
+  router.test(request.method, request.url);
+}
+
+test({ method: 'GET', url: '/hello/marekkobida' }, console.log);
