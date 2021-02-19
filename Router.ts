@@ -21,7 +21,7 @@ class Router<C extends any[]> {
   }
 
   assignContext(context: C): this {
-    this.context = context;
+    this.#context = context;
 
     return this;
   }
