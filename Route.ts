@@ -4,7 +4,7 @@
 
 import urlToRegExp from './urlToRegExp';
 
-interface UrlParameters extends Record<string, any> {}
+interface UrlParameters extends Partial<Record<string, string>> {}
 
 interface AfterTest<Context extends Record<string, any> = {}> {
   (urlParameters: UrlParameters, context: Context): any;
@@ -14,8 +14,6 @@ class Route<Context extends Record<string, any> = {}> {
   #children: [method: string, afterTest: AfterTest<Context>][] = [];
 
   #context: Context = {} as Context;
-
-  #currentUrlParameters: UrlParameters = {};
 
   readonly #url: [string, RegExp];
 
@@ -29,16 +27,8 @@ class Route<Context extends Record<string, any> = {}> {
     return this;
   }
 
-  get context(): Context {
-    return this.#context;
-  }
-
   set context(context: Context) {
     this.#context = context;
-  }
-
-  get currentUrlParameters(): UrlParameters {
-    return this.#currentUrlParameters;
   }
 
   delete(afterTest: AfterTest<Context>): this {
@@ -81,18 +71,16 @@ class Route<Context extends Record<string, any> = {}> {
     return url.match(this.#url[1])?.groups || {};
   }
 
-  test(method: string, url: string): boolean {
+  test(method: string, url: string): this | undefined {
     if (this.#url[1].test(url)) {
       for (const child of this.#children) {
         if (child[0] === method) {
-          child[1]((this.#currentUrlParameters = this.readUrlParameters(url)), this.#context);
+          child[1](this.readUrlParameters(url), this.#context);
 
-          return true;
+          return this;
         }
       }
     }
-
-    return false;
   }
 
   get url(): [string, RegExp] {

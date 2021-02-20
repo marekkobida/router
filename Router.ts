@@ -7,8 +7,6 @@ import Route from './Route';
 class Router<Context extends Record<string, any> = {}> {
   #context: Context = {} as Context;
 
-  #currentRoute?: Route<Context>;
-
   #routes: Route<Context>[] = [];
 
   addRoute(url: string): Route<Context> {
@@ -19,34 +17,22 @@ class Router<Context extends Record<string, any> = {}> {
     return route;
   }
 
-  get context(): Context {
-    return this.#context;
-  }
-
   set context(context: Context) {
     this.#context = context;
-  }
-
-  get currentRoute(): Route<Context> | undefined {
-    return this.#currentRoute;
   }
 
   get routes(): Route<Context>[] {
     return this.#routes;
   }
 
-  test(method: string, url: string): boolean {
+  test(method: string, url: string): Route<Context> | undefined {
     for (const route of this.#routes) {
       route.context = this.#context;
 
       if (route.test(method, url)) {
-        this.#currentRoute = route;
-
-        return true;
+        return route;
       }
     }
-
-    return false;
   }
 }
 
