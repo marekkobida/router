@@ -5,6 +5,11 @@
 import Router from '../Router';
 import isNameValid from './isNameValid';
 
+interface Context extends Router.Context {
+  request: Request;
+  response: Response;
+}
+
 interface Request {
   method: string;
   url: string;
@@ -12,11 +17,6 @@ interface Request {
 
 interface Response {
   (response: string): void;
-}
-
-interface Context {
-  request: Request;
-  response: Response;
 }
 
 const router = new Router<Context>();

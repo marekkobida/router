@@ -2,10 +2,9 @@
  * Copyright 2021 Marek Kobida
  */
 
-import { R } from './types';
 import Route from './Route';
 
-class Router<C extends R.Context = {}> {
+class Router<C extends Router.Context = {}> {
   #context: C = {} as C;
 
   #routes: Route<C>[] = [];
@@ -33,6 +32,10 @@ class Router<C extends R.Context = {}> {
       if (route.test(method, url)) return route;
     }
   }
+}
+
+namespace Router {
+  export interface Context extends Record<string, any> {}
 }
 
 export default Router;
