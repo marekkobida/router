@@ -2,18 +2,13 @@
  * Copyright 2021 Marek Kobida
  */
 
+import { R } from './types';
 import urlToRegExp from './urlToRegExp';
 
-interface UrlParameters extends Partial<Record<string, string>> {}
+class Route<C extends R.Context = {}> {
+  #children: [method: string, afterTest: R.AfterTest<C>[]][] = [];
 
-interface AfterTest<Context extends Record<string, any> = {}> {
-  (urlParameters: UrlParameters, context: Context): any;
-}
-
-class Route<Context extends Record<string, any> = {}> {
-  #children: [method: string, afterTest: AfterTest<Context>][] = [];
-
-  #context: Context = {} as Context;
+  #context: C = {} as C;
 
   readonly #url: [string, RegExp];
 
@@ -21,66 +16,82 @@ class Route<Context extends Record<string, any> = {}> {
     this.#url = [url, urlToRegExp(url)];
   }
 
-  addChild(method: string, afterTest: AfterTest<Context>): this {
+  addChild(method: string, ...afterTest: R.AfterTest<C>[]): this {
     this.#children.push([method, afterTest]);
 
     return this;
   }
 
-  set context(context: Context) {
+  set context(context: C) {
     this.#context = context;
   }
 
-  delete(afterTest: AfterTest<Context>): this {
-    this.addChild('DELETE', afterTest);
+  delete(...afterTest: R.AfterTest<C>[]): this {
+    this.addChild('DELETE', ...afterTest);
 
     return this;
   }
 
-  get(afterTest: AfterTest<Context>): this {
-    this.addChild('GET', afterTest);
+  get(...afterTest: R.AfterTest<C>[]): this {
+    this.addChild('GET', ...afterTest);
 
     return this;
   }
 
-  options(afterTest: AfterTest<Context>): this {
-    this.addChild('OPTIONS', afterTest);
+  options(...afterTest: R.AfterTest<C>[]): this {
+    this.addChild('OPTIONS', ...afterTest);
 
     return this;
   }
 
-  patch(afterTest: AfterTest<Context>): this {
-    this.addChild('PATCH', afterTest);
+  patch(...afterTest: R.AfterTest<C>[]): this {
+    this.addChild('PATCH', ...afterTest);
 
     return this;
   }
 
-  post(afterTest: AfterTest<Context>): this {
-    this.addChild('POST', afterTest);
+  post(...afterTest: R.AfterTest<C>[]): this {
+    this.addChild('POST', ...afterTest);
 
     return this;
   }
 
-  put(afterTest: AfterTest<Context>): this {
-    this.addChild('PUT', afterTest);
+  put(...afterTest: R.AfterTest<C>[]): this {
+    this.addChild('PUT', ...afterTest);
 
     return this;
   }
 
-  readUrlParameters(url: string): UrlParameters {
+  readUrlParameters(url: string): R.UrlParameters {
     return url.match(this.#url[1])?.groups || {};
   }
 
-  test(method: string, url: string): this | undefined {
-    if (this.#url[1].test(url)) {
-      for (const child of this.#children) {
-        if (child[0] === method) {
-          child[1](this.readUrlParameters(url), this.#context);
+  t(afterTest: R.AfterTest<C>[], i: number, url: string): this {
+    const next = () => this.t(afterTest, i + 1, url);
 
-          return this;
-        }
+    if (afterTest[i]) {
+      const context = {
+        ...this.#context,
+        urlParameters: this.readUrlParameters(url),
+      };
+
+      switch (afterTest[i].length) {
+        case 1:
+          afterTest[i](context, () => {});
+          next();
+          break;
+        case 2:
+          afterTest[i](context, next);
+          break;
       }
     }
+
+    return this;
+  }
+
+  test(method: string, url: string): this | undefined {
+    if (this.#url[1].test(url))
+      for (const child of this.#children) if (child[0] === method) return this.t(child[1], 0, url);
   }
 
   get url(): [string, RegExp] {
