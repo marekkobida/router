@@ -67,7 +67,9 @@ class Route<C extends Router.Context = {}> {
   }
 
   #t = (afterTest: Route.AfterTest<C>[], i: number, url: string): this => {
-    const next = () => this.#t(afterTest, i + 1, url);
+    const next = () => {
+      this.#t(afterTest, i + 1, url);
+    };
 
     if (afterTest[i]) {
       const context = {
@@ -77,7 +79,7 @@ class Route<C extends Router.Context = {}> {
 
       switch (afterTest[i].length) {
         case 1:
-          afterTest[i](context, () => this);
+          afterTest[i](context, () => {});
           next();
           break;
         case 2:
@@ -101,7 +103,7 @@ class Route<C extends Router.Context = {}> {
 
 namespace Route {
   export interface AfterTest<C extends Router.Context = {}> {
-    (context: C & { urlParameters: UrlParameters }, next: () => Route<C>): void;
+    (context: C & { urlParameters: UrlParameters }, next: () => void): void;
   }
 
   export interface UrlParameters extends Partial<Record<string, string>> {}
