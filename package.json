@@ -3,5 +3,9 @@
     "typescript": "^4.1.5"
   },
   "name": "@warden-sk/router",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/warden-sk/router.git"
+  },
   "version": "1.4.0"
 }
