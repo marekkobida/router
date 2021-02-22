@@ -1,4 +1,0 @@
-[submodule "compiled"]
-  branch = compiled
-  path = compiled
-  url = https://github.com/warden-sk/router.git
