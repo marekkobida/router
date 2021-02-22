@@ -8,16 +8,17 @@ import urlToRegExp from './urlToRegExp';
 class Route<C extends Router.Context = {}> {
   #children: [method: string, afterTest: Route.AfterTest<C>[]][] = [];
 
-  #context: C = {} as C;
+  #context: C;
 
   readonly #url: [string, RegExp];
 
-  constructor(url: string) {
+  constructor(url: string, context: C = {} as C) {
+    this.#context = context;
     this.#url = [url, urlToRegExp(url)];
   }
 
-  addChild(method: string, ...afterTest: Route.AfterTest<C>[]): this {
-    this.#children.push([method, afterTest]);
+  addChild(method: string, ...afterTest: Route.AfterTests<C>): this {
+    this.#children.push([method, afterTest.flat(Infinity)]);
 
     return this;
   }
@@ -26,37 +27,37 @@ class Route<C extends Router.Context = {}> {
     this.#context = context;
   }
 
-  delete(...afterTest: Route.AfterTest<C>[]): this {
+  delete(...afterTest: Route.AfterTests<C>): this {
     this.addChild('DELETE', ...afterTest);
 
     return this;
   }
 
-  get(...afterTest: Route.AfterTest<C>[]): this {
+  get(...afterTest: Route.AfterTests<C>): this {
     this.addChild('GET', ...afterTest);
 
     return this;
   }
 
-  options(...afterTest: Route.AfterTest<C>[]): this {
+  options(...afterTest: Route.AfterTests<C>): this {
     this.addChild('OPTIONS', ...afterTest);
 
     return this;
   }
 
-  patch(...afterTest: Route.AfterTest<C>[]): this {
+  patch(...afterTest: Route.AfterTests<C>): this {
     this.addChild('PATCH', ...afterTest);
 
     return this;
   }
 
-  post(...afterTest: Route.AfterTest<C>[]): this {
+  post(...afterTest: Route.AfterTests<C>): this {
     this.addChild('POST', ...afterTest);
 
     return this;
   }
 
-  put(...afterTest: Route.AfterTest<C>[]): this {
+  put(...afterTest: Route.AfterTests<C>): this {
     this.addChild('PUT', ...afterTest);
 
     return this;
@@ -66,9 +67,9 @@ class Route<C extends Router.Context = {}> {
     return url.match(this.#url[1])?.groups || {};
   }
 
-  #t = (afterTest: Route.AfterTest<C>[], i: number, url: string): this => {
+  #_2 = (afterTest: Route.AfterTest<C>[], i: number, url: string): this => {
     const next = () => {
-      this.#t(afterTest, i + 1, url);
+      this.#_2(afterTest, i + 1, url);
     };
 
     if (afterTest[i]) {
@@ -93,7 +94,7 @@ class Route<C extends Router.Context = {}> {
 
   test(method: string, url: string): this | undefined {
     if (this.#url[1].test(url))
-      for (const child of this.#children) if (child[0] === method) return this.#t(child[1], 0, url);
+      for (const child of this.#children) if (child[0] === method) return this.#_2(child[1], 0, url);
   }
 
   get url(): [string, RegExp] {
@@ -105,6 +106,8 @@ namespace Route {
   export interface AfterTest<C extends Router.Context = {}> {
     (context: C & { urlParameters: UrlParameters }, next: () => void): void;
   }
+
+  export interface AfterTests<C extends Router.Context = {}> extends Array<AfterTest<C> | AfterTests<C>> {}
 
   export interface UrlParameters extends Partial<Record<string, string>> {}
 }

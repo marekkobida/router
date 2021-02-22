@@ -5,12 +5,16 @@
 import Route from './Route';
 
 class Router<C extends Router.Context = {}> {
-  #context: C = {} as C;
+  #context: C;
 
   #routes: Route<C>[] = [];
 
+  constructor(context: C = {} as C) {
+    this.#context = context;
+  }
+
   addRoute(url: string): Route<C> {
-    const route = new Route<C>(url);
+    const route = new Route<C>(url, this.#context);
 
     this.#routes.push(route);
 
