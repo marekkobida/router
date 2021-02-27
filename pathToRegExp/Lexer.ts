@@ -20,6 +20,7 @@ class Lexer {
       const character = path[this.i];
 
       if (character === '(') {
+        // počet zátvoriek
         let $ = 1;
         let j = this.i + 1;
         let pattern = '';
