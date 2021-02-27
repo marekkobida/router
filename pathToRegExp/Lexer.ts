@@ -3,11 +3,11 @@
  */
 
 class Lexer {
-  i: number = 0;
+  private i: number = 0;
 
-  tokens: Lexer.Token[] = [];
+  private tokens: Lexer.Token[] = [];
 
-  addToken(type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] {
+  private addToken(type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] {
     this.tokens.push({ atIndex, index, type });
 
     return this.tokens;
@@ -32,18 +32,9 @@ class Lexer {
         let parameterName = '';
 
         while (j < path.length) {
-          const characterCode = path.charCodeAt(j);
+          const $ = path[j];
 
-          if (
-            // 0-9
-            (characterCode >= 48 && characterCode <= 57) ||
-            // A-Z
-            (characterCode >= 65 && characterCode <= 90) ||
-            // _
-            characterCode === 95 ||
-            // a-z
-            (characterCode >= 97 && characterCode <= 122)
-          ) {
+          if (new RegExp('^[0-9A-Z_a-z]+$').test($)) {
             parameterName += path[j++];
             continue;
           }
