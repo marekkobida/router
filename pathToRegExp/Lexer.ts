@@ -3,6 +3,8 @@
  */
 
 class Lexer {
+  private static PARAMETER_NAME_PATTERN: RegExp = /^[0-9A-Z_]+$/i;
+
   private i: number = 0;
 
   private tokens: Lexer.Token[] = [];
@@ -22,7 +24,7 @@ class Lexer {
         let j = this.i + 1;
         let pattern = '';
 
-        if (path[j] === '?') throw new TypeError(`The "?" is not allowed at ${j}.`);
+        if (path[j] === '?') throw new TypeError(`The "${path[j]}" is not allowed at ${j}.`);
 
         while (j < path.length) {
           if (path[j] === '\\') {
@@ -68,7 +70,7 @@ class Lexer {
         while (j < path.length) {
           const $ = path[j];
 
-          if (new RegExp('^[0-9A-Z_a-z]+$').test($)) {
+          if (Lexer.PARAMETER_NAME_PATTERN.test($)) {
             parameterName += path[j++];
             continue;
           }
