@@ -67,9 +67,9 @@ class Route<C extends Router.Context = {}> {
     return url.match(this.#url[1])?.groups || {};
   }
 
-  #_2 = (afterTest: Route.AfterTest<C>[], i: number, url: string): this => {
+  #test = (afterTest: Route.AfterTest<C>[], i: number, url: string): this => {
     const next = () => {
-      this.#_2(afterTest, i + 1, url);
+      this.#test(afterTest, i + 1, url);
     };
 
     if (afterTest[i]) {
@@ -94,7 +94,7 @@ class Route<C extends Router.Context = {}> {
 
   test(method: string, url: string): this | undefined {
     if (this.#url[1].test(url))
-      for (const child of this.#children) if (child[0] === method) return this.#_2(child[1], 0, url);
+      for (const child of this.#children) if (child[0] === method) return this.#test(child[1], 0, url);
   }
 
   get url(): [string, RegExp] {

@@ -13,8 +13,14 @@ class Router<C extends Router.Context = {}> {
     this.#context = context;
   }
 
-  addRoute(url: string): Route<C> {
-    const route = new Route<C>(url, this.#context);
+  addRoute(route: Route<C> | string): Route<C> {
+    if (route instanceof Route) {
+      route.context = this.#context;
+    }
+
+    if (typeof route === 'string') {
+      route = new Route<C>(route, this.#context);
+    }
 
     this.#routes.push(route);
 

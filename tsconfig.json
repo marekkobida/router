@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "outDir": "./compiled",
+    "outDir": "./public",
     "strict": true,
     "target": "ES2020"
   }
