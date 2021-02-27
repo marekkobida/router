@@ -3,26 +3,25 @@
  */
 
 class Lexer {
-  private static PARAMETER_NAME_PATTERN: RegExp = /^[0-9A-Z_]+$/i;
+  #PARAMETER_NAME_PATTERN: RegExp = /^[0-9A-Z_]+$/i;
 
-  private i: number = 0;
+  #i: number = 0;
 
-  private tokens: Lexer.Token[] = [];
+  #tokens: Lexer.Token[] = [];
 
-  private addToken(type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] {
-    this.tokens.push({ atIndex, index, type });
+  addToken(type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] {
+    this.#tokens.push({ atIndex, index, type });
 
-    return this.tokens;
+    return this.#tokens;
   }
 
   test(path: string): Lexer.Token[] {
-    while (this.i < path.length) {
-      const character = path[this.i];
+    while (this.#i < path.length) {
+      const character = path[this.#i];
 
       if (character === '(') {
-        // počet zátvoriek
-        let $ = 1;
-        let j = this.i + 1;
+        let $ = 1; // počet zátvoriek
+        let j = this.#i + 1;
         let pattern = '';
 
         if (path[j] === '?') throw new TypeError(`The "${path[j]}" is not allowed at ${j}.`);
@@ -49,29 +48,29 @@ class Lexer {
           pattern += path[j++];
         }
 
-        if ($) throw new TypeError(`The pattern is not valid at ${this.i}.`);
+        if ($) throw new TypeError(`The pattern is not valid at ${this.#i}.`);
 
-        if (!pattern) throw new TypeError(`The pattern is not valid at ${this.i}.`);
+        if (!pattern) throw new TypeError(`The pattern is not valid at ${this.#i}.`);
 
-        this.addToken('PATTERN', this.i, pattern);
+        this.addToken('PATTERN', this.#i, pattern);
 
-        this.i = j;
+        this.#i = j;
         continue;
       }
 
       if (character === '*' || character === '+' || character === '?') {
-        this.addToken('MODIFIER', this.i, path[this.i++]);
+        this.addToken('MODIFIER', this.#i, path[this.#i++]);
         continue;
       }
 
       if (character === ':') {
-        let j = this.i + 1;
+        let j = this.#i + 1;
         let parameterName = '';
 
         while (j < path.length) {
           const $ = path[j];
 
-          if (Lexer.PARAMETER_NAME_PATTERN.test($)) {
+          if (this.#PARAMETER_NAME_PATTERN.test($)) {
             parameterName += path[j++];
             continue;
           }
@@ -79,25 +78,25 @@ class Lexer {
           break;
         }
 
-        if (!parameterName) throw new TypeError(`The parameter name is not valid at ${this.i}.`);
+        if (!parameterName) throw new TypeError(`The parameter name is not valid at ${this.#i}.`);
 
-        this.addToken('PARAMETER_NAME', this.i, parameterName);
+        this.addToken('PARAMETER_NAME', this.#i, parameterName);
 
-        this.i = j;
+        this.#i = j;
         continue;
       }
 
       if (character === '\\') {
-        this.addToken('ESCAPED_CHARACTER', this.i++, path[this.i++]);
+        this.addToken('ESCAPED_CHARACTER', this.#i++, path[this.#i++]);
         continue;
       }
 
-      this.addToken('CHARACTER', this.i, path[this.i++]);
+      this.addToken('CHARACTER', this.#i, path[this.#i++]);
     }
 
-    this.addToken('END', this.i, '');
+    this.addToken('END', this.#i, '');
 
-    return this.tokens;
+    return this.#tokens;
   }
 }
 
