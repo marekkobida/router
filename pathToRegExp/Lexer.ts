@@ -48,7 +48,7 @@ class Lexer {
           pattern += path[j++];
         }
 
-        if ($) throw new TypeError(`The pattern is not valid at  ${this.i}.`);
+        if ($) throw new TypeError(`The pattern is not valid at ${this.i}.`);
 
         if (!pattern) throw new TypeError(`The pattern is not valid at ${this.i}.`);
 
