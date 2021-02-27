@@ -68,9 +68,7 @@ class Lexer {
         let parameterName = '';
 
         while (j < path.length) {
-          const $ = path[j];
-
-          if (this.#PARAMETER_NAME_PATTERN.test($)) {
+          if (this.#PARAMETER_NAME_PATTERN.test(path[j])) {
             parameterName += path[j++];
             continue;
           }
