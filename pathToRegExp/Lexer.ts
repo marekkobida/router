@@ -17,39 +17,6 @@ class Lexer {
     while (this.i < path.length) {
       const character = path[this.i];
 
-      if (character === '\\') {
-        this.addToken('ESCAPED_CHARACTER', this.i++, path[this.i++]);
-        continue;
-      }
-
-      if (character === '*' || character === '+' || character === '?') {
-        this.addToken('MODIFIER', this.i, path[this.i++]);
-        continue;
-      }
-
-      if (character === ':') {
-        let j = this.i + 1;
-        let parameterName = '';
-
-        while (j < path.length) {
-          const $ = path[j];
-
-          if (new RegExp('^[0-9A-Z_a-z]+$').test($)) {
-            parameterName += path[j++];
-            continue;
-          }
-
-          break;
-        }
-
-        if (!parameterName) throw new TypeError(`The parameter name is not valid at ${this.i}.`);
-
-        this.addToken('PARAMETER_NAME', this.i, parameterName);
-
-        this.i = j;
-        continue;
-      }
-
       if (character === '(') {
         let $ = 1;
         let j = this.i + 1;
@@ -86,6 +53,39 @@ class Lexer {
         this.addToken('PATTERN', this.i, pattern);
 
         this.i = j;
+        continue;
+      }
+
+      if (character === '*' || character === '+' || character === '?') {
+        this.addToken('MODIFIER', this.i, path[this.i++]);
+        continue;
+      }
+
+      if (character === ':') {
+        let j = this.i + 1;
+        let parameterName = '';
+
+        while (j < path.length) {
+          const $ = path[j];
+
+          if (new RegExp('^[0-9A-Z_a-z]+$').test($)) {
+            parameterName += path[j++];
+            continue;
+          }
+
+          break;
+        }
+
+        if (!parameterName) throw new TypeError(`The parameter name is not valid at ${this.i}.`);
+
+        this.addToken('PARAMETER_NAME', this.i, parameterName);
+
+        this.i = j;
+        continue;
+      }
+
+      if (character === '\\') {
+        this.addToken('ESCAPED_CHARACTER', this.i++, path[this.i++]);
         continue;
       }
 
