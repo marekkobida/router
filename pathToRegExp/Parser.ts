@@ -5,7 +5,7 @@
 import Lexer from './Lexer';
 
 class Parser {
-  #i: number = 0;
+  #i = 0;
 
   test(tokens: Lexer.Token[]) {}
 }

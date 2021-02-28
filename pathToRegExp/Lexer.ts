@@ -3,9 +3,9 @@
  */
 
 class Lexer {
-  #PARAMETER_NAME_PATTERN: RegExp = /^[0-9A-Z_]+$/i;
+  #PARAMETER_NAME_PATTERN = /^[0-9A-Z_]+$/i;
 
-  #i: number = 0;
+  #i = 0;
 
   #tokens: Lexer.Token[] = [];
 
