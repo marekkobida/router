@@ -16,4 +16,4 @@ function pathToRegExp(path: string) {
   console.log(parser.test(tokens));
 }
 
-pathToRegExp('/test/:id(\\d+)\\-*');
+pathToRegExp('/test/:id(\\d+)');

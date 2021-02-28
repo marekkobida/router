@@ -11,29 +11,19 @@ class Parser {
 
   #tokens: (Parser.Token | string)[] = [];
 
-  test(lexerTokens: Lexer.Token[]): (Parser.Token | string)[] {
-    const _1 = (type: Lexer.Token['type']): string | undefined => {
-      if (this.#i < lexerTokens.length && lexerTokens[this.#i].type === type) return lexerTokens[this.#i++].atIndex;
+  test(tokens: Lexer.Token[]): (Parser.Token | string)[] {
+    const test = (type: Lexer.Token['type']): string | undefined => {
+      if (this.#i < tokens.length && tokens[this.#i].type === type) return tokens[this.#i++].atIndex;
     };
 
-    const _2 = (type: Lexer.Token['type']): string => {
-      const _3 = _1(type);
-
-      if (_3 !== undefined) return _3;
-
-      const { index, type: nextType } = lexerTokens[this.#i];
-
-      throw new TypeError(`Unexpected ${nextType} at ${index}, expected ${type}`);
-    };
-
-    while (this.#i < lexerTokens.length) {
-      const character = _1('CHARACTER');
-      const parameterName = _1('PARAMETER_NAME');
-      const pattern = _1('PATTERN');
+    while (this.#i < tokens.length) {
+      const character = test('CHARACTER');
+      const parameterName = test('PARAMETER_NAME');
+      const pattern = test('PATTERN');
 
       if (parameterName || pattern) {
         this.#tokens.push({
-          modifier: _1('MODIFIER') || '',
+          modifier: test('MODIFIER') || '',
           parameterName: parameterName || this.#j++,
           pattern: pattern || '[^#/?]+?',
           prefix: character || '',
@@ -41,14 +31,20 @@ class Parser {
         continue;
       }
 
-      const _4 = character || _1('ESCAPED_CHARACTER');
+      const $ = character || test('ESCAPED_CHARACTER');
 
-      if (_4) {
-        this.#tokens.push(_4);
+      if ($) {
+        this.#tokens.push($);
         continue;
       }
 
-      _2('END');
+      const endToken = test('END');
+
+      if (typeof endToken === 'undefined') {
+        const { index, type: nextType } = tokens[this.#i];
+
+        throw new TypeError(`unexpected "${nextType}" at ${index}, expected "END"`);
+      }
     }
 
     return this.#tokens;
