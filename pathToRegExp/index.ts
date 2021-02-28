@@ -11,7 +11,7 @@ function pathToRegExp(path: string) {
 
   const tokens = lexer.test(path);
 
-  console.log('tokens', tokens);
+  console.log(tokens);
 
   console.log(parser.test(tokens));
 }
