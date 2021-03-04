@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "typescript": "^4.2.2"
+    "typescript": "^4.2.3"
   },
   "name": "@warden-sk/router",
   "repository": {
