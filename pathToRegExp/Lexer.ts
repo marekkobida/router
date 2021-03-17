@@ -9,16 +9,15 @@ class Lexer {
 
   #tokens: Lexer.Token[] = [];
 
-  addToken(type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] {
-    this.#tokens.push({ atIndex, index, type });
-
-    return this.#tokens;
-  }
+  // 🟩
+  #addToken = (type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] =>
+    (this.#tokens = [...this.#tokens, { atIndex, index, type }]);
 
   test(path: string): Lexer.Token[] {
     while (this.#i < path.length) {
       const character = path[this.#i];
 
+      // 🟥
       if (character === '(') {
         let $ = 1; // počet zátvoriek
         let j = this.#i + 1;
@@ -52,17 +51,19 @@ class Lexer {
 
         if (!pattern) throw new TypeError(`The pattern is not valid at ${this.#i}.`);
 
-        this.addToken('PATTERN', this.#i, pattern);
+        this.#addToken('PATTERN', this.#i, pattern);
 
         this.#i = j;
         continue;
       }
 
+      // 🟥
       if (character === '*' || character === '+' || character === '?') {
-        this.addToken('MODIFIER', this.#i, path[this.#i++]);
+        this.#addToken('MODIFIER', this.#i, path[this.#i++]);
         continue;
       }
 
+      // 🟥
       if (character === ':') {
         let j = this.#i + 1;
         let parameterName = '';
@@ -78,21 +79,24 @@ class Lexer {
 
         if (!parameterName) throw new TypeError(`The parameter name is not valid at ${this.#i}.`);
 
-        this.addToken('PARAMETER_NAME', this.#i, parameterName);
+        this.#addToken('PARAMETER_NAME', this.#i, parameterName);
 
         this.#i = j;
         continue;
       }
 
+      // 🟩
       if (character === '\\') {
-        this.addToken('ESCAPED_CHARACTER', this.#i++, path[this.#i++]);
+        this.#addToken('ESCAPED_CHARACTER', this.#i++, path[this.#i++]);
         continue;
       }
 
-      this.addToken('CHARACTER', this.#i, path[this.#i++]);
+      // 🟩
+      this.#addToken('CHARACTER', this.#i, path[this.#i++]);
     }
 
-    this.addToken('END', this.#i, '');
+    // 🟩
+    this.#addToken('END', this.#i, '');
 
     return this.#tokens;
   }
