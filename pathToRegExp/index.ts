@@ -5,14 +5,15 @@
 import Lexer from './Lexer';
 // import Parser from './Parser';
 
-function pathToRegExp(path: string) {
-  const lexer = new Lexer();
-  // const parser = new Parser();
+function pathToRegExp(path: string): RegExp {
+  const lexer = new Lexer(path);
 
-  const _1 = lexer.test(path);
+  const _1 = lexer.test();
 
   console.log('lexer', _1);
 
+  // const parser = new Parser();
+  //
   // const _2 = parser.test(_1);
   //
   // console.log('parser', _2);
@@ -43,8 +44,8 @@ function pathToRegExp(path: string) {
   // }
   //
   // $ += '$';
-  //
-  // return new RegExp($);
+
+  return new RegExp('');
 }
 
-pathToRegExp('/test/:id(\\d+)');
+pathToRegExp('\\');
