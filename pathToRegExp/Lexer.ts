@@ -11,28 +11,24 @@ class Lexer {
 
   #tokens: Lexer.Token[] = [];
 
-  // 🟩
   constructor(input?: string) {
     this.#input = input;
   }
 
-  // 🟩
   #addToken = (type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] =>
     (this.#tokens = [...this.#tokens, { atIndex, index, type }]);
 
-  // 🟥
   test(input = this.#input): Lexer.Token[] {
     if (input) {
       while (this.#currentIndex < input.length) {
-        const character = input[this.#currentIndex];
+        const currentCharacter = input[this.#currentIndex];
 
-        // 🟥
-        if (character === '(') {
+        if (currentCharacter === '(') {
           let $ = 1; // počet zátvoriek
           let j = this.#currentIndex + 1;
           let pattern = '';
 
-          if (input[j] === '?') throw new TypeError(`The "${input[j]}" is not allowed at ${j}.`);
+          if (input[j] === '?') throw new TypeError(`The "?" is not allowed at ${j}.`);
 
           while (j < input.length) {
             if (input[j] === '\\') {
@@ -50,7 +46,7 @@ class Lexer {
             } else if (input[j] === '(') {
               $++;
 
-              if (input[j + 1] !== '?') throw new TypeError(`The "${input[j + 1]}" is not allowed at ${j}.`);
+              if (input[j + 1] !== '?') throw new TypeError(`The "${input[j + 1]}" is not allowed at ${j + 1}.`);
             }
 
             pattern += input[j++];
@@ -66,18 +62,17 @@ class Lexer {
           continue;
         }
 
-        // 🟥
-        if (character === '*' || character === '+' || character === '?') {
+        if (currentCharacter === '*' || currentCharacter === '+' || currentCharacter === '?') {
           this.#addToken('MODIFIER', this.#currentIndex, input[this.#currentIndex++]);
           continue;
         }
 
-        // 🟥
-        if (character === ':') {
+        if (currentCharacter === ':') {
           let j = this.#currentIndex + 1;
           let parameterName = '';
 
           while (j < input.length) {
+            // nahradiť RegExp
             if (this.#PARAMETER_NAME_PATTERN.test(input[j])) {
               parameterName += input[j++];
               continue;
@@ -94,17 +89,14 @@ class Lexer {
           continue;
         }
 
-        // 🟩
-        if (character === '\\') {
+        if (currentCharacter === '\\') {
           this.#addToken('ESCAPED_CHARACTER', this.#currentIndex++, input[this.#currentIndex++]);
           continue;
         }
 
-        // 🟩
         this.#addToken('CHARACTER', this.#currentIndex, input[this.#currentIndex++]);
       }
 
-      // 🟩
       this.#addToken('END', this.#currentIndex, '');
 
       return this.#tokens;
@@ -116,7 +108,7 @@ class Lexer {
 
 namespace Lexer {
   export interface Token {
-    atIndex: string | undefined;
+    atIndex: string;
     index: number;
     type: 'CHARACTER' | 'END' | 'ESCAPED_CHARACTER' | 'MODIFIER' | 'PARAMETER_NAME' | 'PATTERN';
   }

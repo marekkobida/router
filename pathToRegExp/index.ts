@@ -6,6 +6,8 @@ import Lexer from './Lexer';
 // import Parser from './Parser';
 
 function pathToRegExp(path: string): RegExp {
+  console.log('path', path);
+
   const lexer = new Lexer(path);
 
   const _1 = lexer.test();
@@ -48,4 +50,4 @@ function pathToRegExp(path: string): RegExp {
   return new RegExp('');
 }
 
-pathToRegExp('\\');
+pathToRegExp('(a(?b)c)');
