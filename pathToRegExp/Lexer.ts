@@ -7,49 +7,52 @@ class Lexer {
 
   #currentIndex = 0;
 
-  #input?: string;
+  readonly #input: string;
 
   #tokens: Lexer.Token[] = [];
 
-  constructor(input?: string) {
+  constructor(input: string) {
     this.#input = input;
   }
 
   #addToken = (type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] =>
     (this.#tokens = [...this.#tokens, { atIndex, index, type }]);
 
-  test(input = this.#input): Lexer.Token[] {
-    if (input) {
-      while (this.#currentIndex < input.length) {
-        const currentCharacter = input[this.#currentIndex];
+  test(): Lexer.Token[] {
+    if (this.#input) {
+      while (this.#currentIndex < this.#input.length) {
+        const currentCharacter = this.#input[this.#currentIndex];
 
         if (currentCharacter === '(') {
           let $ = 1; // počet zátvoriek
           let j = this.#currentIndex + 1;
           let pattern = '';
 
-          if (input[j] === '?') throw new TypeError(`The "?" is not allowed at ${j}.`);
+          if (this.#input[j] === '?') throw new TypeError(`The "?" is not allowed at ${j}.`);
 
-          while (j < input.length) {
-            if (input[j] === '\\') {
-              pattern += input[j++] + input[j++];
-              continue;
+          while (j < this.#input.length) {
+            if (this.#input[j] === '(') {
+              $++;
+
+              if (this.#input[j + 1] !== '?')
+                throw new TypeError(`The "${this.#input[j + 1]}" is not allowed at ${j + 1}.`);
             }
 
-            if (input[j] === ')') {
+            if (this.#input[j] === ')') {
               $--;
 
               if ($ === 0) {
                 j++;
                 break;
               }
-            } else if (input[j] === '(') {
-              $++;
-
-              if (input[j + 1] !== '?') throw new TypeError(`The "${input[j + 1]}" is not allowed at ${j + 1}.`);
             }
 
-            pattern += input[j++];
+            if (this.#input[j] === '\\') {
+              pattern += this.#input[j++] + this.#input[j++];
+              continue;
+            }
+
+            pattern += this.#input[j++];
           }
 
           if ($) throw new TypeError(`The pattern is not valid at ${this.#currentIndex}.`);
@@ -63,7 +66,7 @@ class Lexer {
         }
 
         if (currentCharacter === '*' || currentCharacter === '+' || currentCharacter === '?') {
-          this.#addToken('MODIFIER', this.#currentIndex, input[this.#currentIndex++]);
+          this.#addToken('MODIFIER', this.#currentIndex, this.#input[this.#currentIndex++]);
           continue;
         }
 
@@ -71,10 +74,10 @@ class Lexer {
           let j = this.#currentIndex + 1;
           let parameterName = '';
 
-          while (j < input.length) {
+          while (j < this.#input.length) {
             // nahradiť RegExp
-            if (this.#PARAMETER_NAME_PATTERN.test(input[j])) {
-              parameterName += input[j++];
+            if (this.#PARAMETER_NAME_PATTERN.test(this.#input[j])) {
+              parameterName += this.#input[j++];
               continue;
             }
 
@@ -90,11 +93,11 @@ class Lexer {
         }
 
         if (currentCharacter === '\\') {
-          this.#addToken('ESCAPED_CHARACTER', this.#currentIndex++, input[this.#currentIndex++]);
+          this.#addToken('ESCAPED_CHARACTER', this.#currentIndex++, this.#input[this.#currentIndex++]);
           continue;
         }
 
-        this.#addToken('CHARACTER', this.#currentIndex, input[this.#currentIndex++]);
+        this.#addToken('CHARACTER', this.#currentIndex, this.#input[this.#currentIndex++]);
       }
 
       this.#addToken('END', this.#currentIndex, '');

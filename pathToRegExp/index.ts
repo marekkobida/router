@@ -50,4 +50,4 @@ function pathToRegExp(path: string): RegExp {
   return new RegExp('');
 }
 
-pathToRegExp('(a(?b)c)');
+pathToRegExp('(a(?b)\\c)');
