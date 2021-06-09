@@ -1,3 +1,7 @@
+/*
+ * Copyright 2021 Marek Kobida
+ */
+
 import urlToRegExp from '../urlToRegExp/index.js';
 
 function $(elementId: string) {
@@ -22,7 +26,7 @@ function _1() {
 
 function _2() {
   try {
-    $('_6').value = JSON.stringify($('_5').value.match(pattern), null, 2);
+    $('_6').value = JSON.stringify(pattern.exec($('_5').value), null, 2);
   } catch (error) {
     $('_6').value = error.toString();
   }

@@ -2,7 +2,7 @@
  * Copyright 2021 Marek Kobida
  */
 
-import Route from './Route';
+import Route from './Route.js';
 
 class Router<C extends Router.Context = {}> {
   #context: C;

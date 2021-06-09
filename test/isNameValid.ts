@@ -2,7 +2,7 @@
  * Copyright 2021 Marek Kobida
  */
 
-import Route from '../Route';
+import Route from '../Route.js';
 
 const isNameValid: Route.AfterTest = ({ urlParameters: [name] }, next) => {
   if (name && /^[a-z]+$/.test(name)) return next();

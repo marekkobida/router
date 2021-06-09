@@ -2,8 +2,8 @@
  * Copyright 2021 Marek Kobida
  */
 
-import Router from './Router';
-import urlToRegExp from './urlToRegExp';
+import Router from './Router.js';
+import urlToRegExp from './urlToRegExp/index.js';
 
 class Route<C extends Router.Context = {}> {
   #children: [method: string, afterTest: Route.AfterTest<C>[]][] = [];

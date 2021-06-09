@@ -2,8 +2,8 @@
  * Copyright 2021 Marek Kobida
  */
 
-import Router from '../Router';
-import isNameValid from './isNameValid';
+import Router from '../Router.js';
+import isNameValid from './isNameValid.js';
 
 interface Context extends Router.Context {
   request: Request;
