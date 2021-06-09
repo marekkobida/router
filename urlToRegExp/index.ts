@@ -6,8 +6,6 @@ import Lexer from './Lexer.js';
 import Parser from './Parser.js';
 
 function urlToRegExp(path: string): RegExp {
-  console.log('path', path);
-
   const lexer = new Lexer();
 
   const _1 = lexer.test(path);
