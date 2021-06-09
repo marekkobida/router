@@ -5,7 +5,7 @@
 import Lexer from './Lexer';
 import Parser from './Parser';
 
-function pathToRegExp(path: string): RegExp {
+function urlToRegExp(path: string): RegExp {
   console.log('path', path);
 
   const lexer = new Lexer();
@@ -52,4 +52,4 @@ function pathToRegExp(path: string): RegExp {
   return new RegExp($);
 }
 
-export default pathToRegExp;
+export default urlToRegExp;

@@ -3,7 +3,7 @@
  */
 
 import Router from './Router';
-import pathToRegExp from './pathToRegExp';
+import urlToRegExp from './urlToRegExp';
 
 class Route<C extends Router.Context = {}> {
   #children: [method: string, afterTest: Route.AfterTest<C>[]][] = [];
@@ -14,7 +14,7 @@ class Route<C extends Router.Context = {}> {
 
   constructor(url: string, context: C = {} as C) {
     this.#context = context;
-    this.#url = [url, pathToRegExp(url)];
+    this.#url = [url, urlToRegExp(url)];
   }
 
   addChild(method: string, ...afterTest: Route.AfterTests<C>): this {
