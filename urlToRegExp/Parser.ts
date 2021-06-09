@@ -25,7 +25,7 @@ class Parser {
         this.#tokens.push({
           modifier: test('MODIFIER') || '',
           parameterName: parameterName || this.#j++,
-          pattern: pattern || '[^#/?]+?',
+          pattern: pattern || '[^#/?]+',
           prefix: character || '',
         });
         continue;
