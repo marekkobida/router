@@ -5,10 +5,10 @@
 import Lexer from './Lexer.js';
 import Parser from './Parser.js';
 
-function urlToRegExp(path: string): RegExp {
+function urlToRegExp(url: string): RegExp {
   const lexer = new Lexer();
 
-  const _1 = lexer.test(path);
+  const _1 = lexer.test(url);
 
   const parser = new Parser();
 
@@ -25,8 +25,8 @@ function urlToRegExp(path: string): RegExp {
       if (token.pattern) {
         if (token.prefix) {
           if (token.modifier === '+' || token.modifier === '*') {
-            const mod = token.modifier === '*' ? '?' : '';
-            $ += `(?:${token.prefix}((?:${token.pattern})(?:${token.prefix}(?:${token.pattern}))*))${mod}`;
+            const modifier = token.modifier === '*' ? '?' : '';
+            $ += `(?:${token.prefix}((?:${token.pattern})(?:${token.prefix}(?:${token.pattern}))*))${modifier}`;
           } else {
             $ += `(?:${token.prefix}(${token.pattern}))${token.modifier}`;
           }
