@@ -1,0 +1,43 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  margin: 0;
+}
+
+textarea {
+  border: 0.25rem solid #808080;
+  display: block;
+  font-family: "SF Mono";
+  font-size: 1rem;
+  line-height: 1.25;
+  padding: 1rem;
+  resize: none;
+  width: 50vw;
+}
+
+textarea:focus {
+  outline: 0;
+}
+
+#_1,
+#_5 {
+  border-color: #000;
+}
+
+#_1,
+#_2,
+#_5 {
+  height: 10vh;
+}
+
+#_3,
+#_4 {
+  height: 40vh;
+}
+
+#_6 {
+  height: 90vh;
+}
