@@ -2,7 +2,7 @@
  * Copyright 2021 Marek Kobida
  */
 
-import Lexer from './Lexer';
+import Lexer from './Lexer.js';
 
 class Parser {
   #i = 0;

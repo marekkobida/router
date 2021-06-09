@@ -2,8 +2,8 @@
  * Copyright 2021 Marek Kobida
  */
 
-import Lexer from './Lexer';
-import Parser from './Parser';
+import Lexer from './Lexer.js';
+import Parser from './Parser.js';
 
 function urlToRegExp(path: string): RegExp {
   console.log('path', path);
@@ -12,13 +12,9 @@ function urlToRegExp(path: string): RegExp {
 
   const _1 = lexer.test(path);
 
-  console.log('lexer', _1);
-
   const parser = new Parser();
 
   const _2 = parser.test(_1);
-
-  console.log('parser', _2);
 
   let $ = '';
 
@@ -47,9 +43,16 @@ function urlToRegExp(path: string): RegExp {
 
   $ += '$';
 
-  console.log('RegExp', new RegExp($));
+  const lol = new RegExp($);
 
-  return new RegExp($);
+  Object.assign(RegExp.prototype, {
+    lexer: _1,
+    parser: _2,
+  });
+
+  return new RegExp(lol);
 }
+
+globalThis.urlToRegExp = urlToRegExp;
 
 export default urlToRegExp;
