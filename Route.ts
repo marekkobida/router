@@ -3,7 +3,7 @@
  */
 
 import Router from './Router';
-import urlToRegExp from './urlToRegExp';
+import pathToRegExp from './pathToRegExp';
 
 class Route<C extends Router.Context = {}> {
   #children: [method: string, afterTest: Route.AfterTest<C>[]][] = [];
@@ -14,7 +14,7 @@ class Route<C extends Router.Context = {}> {
 
   constructor(url: string, context: C = {} as C) {
     this.#context = context;
-    this.#url = [url, urlToRegExp(url)];
+    this.#url = [url, pathToRegExp(url)];
   }
 
   addChild(method: string, ...afterTest: Route.AfterTests<C>): this {
@@ -64,7 +64,8 @@ class Route<C extends Router.Context = {}> {
   }
 
   readUrlParameters(url: string): Route.UrlParameters {
-    return url.match(this.#url[1])?.groups || {};
+    const [_1, ..._2] = url.match(this.#url[1]) || [];
+    return _2;
   }
 
   #test = (afterTest: Route.AfterTest<C>[], i: number, url: string): this => {
@@ -109,7 +110,7 @@ namespace Route {
 
   export interface AfterTests<C extends Router.Context = {}> extends Array<AfterTest<C> | AfterTests<C>> {}
 
-  export interface UrlParameters extends Partial<Record<string, string>> {}
+  export interface UrlParameters extends Array<string> {}
 }
 
 export default Route;

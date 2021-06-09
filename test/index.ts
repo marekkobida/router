@@ -23,7 +23,7 @@ const router = new Router<Context>();
 
 router
   .addRoute('/hello/:name')
-  .get(isNameValid, ({ request, response, urlParameters: { name } }) => response(`👋 ${name} from ${request.url}`));
+  .get(isNameValid, ({ request, response, urlParameters: [name] }) => response(`👋 ${name} from ${request.url}`));
 
 function server(request: Request, response: Response) {
   try {

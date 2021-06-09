@@ -3,51 +3,53 @@
  */
 
 import Lexer from './Lexer';
-// import Parser from './Parser';
+import Parser from './Parser';
 
 function pathToRegExp(path: string): RegExp {
   console.log('path', path);
 
-  const lexer = new Lexer(path);
+  const lexer = new Lexer();
 
-  const _1 = lexer.test();
+  const _1 = lexer.test(path);
 
   console.log('lexer', _1);
 
-  // const parser = new Parser();
-  //
-  // const _2 = parser.test(_1);
-  //
-  // console.log('parser', _2);
-  //
-  // let $ = '';
-  //
-  // $ += '^';
-  //
-  // for (const token of _2) {
-  //   if (typeof token === 'string') {
-  //     $ += token;
-  //   } else {
-  //     if (token.pattern) {
-  //       if (token.prefix) {
-  //         if (token.modifier === '+' || token.modifier === '*') {
-  //           const mod = token.modifier === '*' ? '?' : '';
-  //           $ += `(?:${token.prefix}((?:${token.pattern})(?:${token.prefix}(?:${token.pattern}))*))${mod}`;
-  //         } else {
-  //           $ += `(?:${token.prefix}(${token.pattern}))${token.modifier}`;
-  //         }
-  //       } else {
-  //         $ += `(${token.pattern})${token.modifier}`;
-  //       }
-  //     } else {
-  //       $ += `(?:${token.prefix})${token.modifier}`;
-  //     }
-  //   }
-  // }
-  //
-  // $ += '$';
+  const parser = new Parser();
 
-  return new RegExp('');
+  const _2 = parser.test(_1);
+
+  console.log('parser', _2);
+
+  let $ = '';
+
+  $ += '^';
+
+  for (const token of _2) {
+    if (typeof token === 'string') {
+      $ += token;
+    } else {
+      if (token.pattern) {
+        if (token.prefix) {
+          if (token.modifier === '+' || token.modifier === '*') {
+            const mod = token.modifier === '*' ? '?' : '';
+            $ += `(?:${token.prefix}((?:${token.pattern})(?:${token.prefix}(?:${token.pattern}))*))${mod}`;
+          } else {
+            $ += `(?:${token.prefix}(${token.pattern}))${token.modifier}`;
+          }
+        } else {
+          $ += `(${token.pattern})${token.modifier}`;
+        }
+      } else {
+        $ += `(?:${token.prefix})${token.modifier}`;
+      }
+    }
+  }
+
+  $ += '$';
+
+  console.log('RegExp', new RegExp($));
+
+  return new RegExp($);
 }
 
-pathToRegExp('(a(?b)\\c)');
+export default pathToRegExp;
