@@ -1,42 +1,39 @@
-const _1 = document.getElementById('_1');
-const _2 = document.getElementById('_2');
-const _3 = document.getElementById('_3');
-const _4 = document.getElementById('_4');
-const _5 = document.getElementById('_5');
-const _6 = document.getElementById('_6');
+import urlToRegExp from '../urlToRegExp/index.js';
 
-let savedRegExp = new RegExp();
+function $(elementId: string) {
+  return document.getElementById(elementId) as HTMLTextAreaElement;
+}
 
-function _66(e) {
+let pattern = new RegExp('');
+
+function _1() {
   try {
-    savedRegExp = globalThis.urlToRegExp(e.value);
+    pattern = urlToRegExp($('_1').value);
 
-    _2.value = savedRegExp;
-    _3.value = JSON.stringify(savedRegExp.lexer, null, 2);
-    _4.value = JSON.stringify(savedRegExp.parser, null, 2);
+    $('_2').value = pattern.toString();
+    $('_3').value = JSON.stringify(pattern.lexer, null, 2);
+    $('_4').value = JSON.stringify(pattern.parser, null, 2);
   } catch (error) {
-    _2.value = '';
-    _3.value = '';
-    _4.value = error.toString();
+    $('_2').value = '';
+    $('_3').value = '';
+    $('_4').value = error.toString();
   }
 }
 
-function _77(e) {
+function _2() {
   try {
-    const [_, ...found] = e.value.match(savedRegExp);
-    _6.value = JSON.stringify(found, null, 2);
+    $('_6').value = JSON.stringify($('_5').value.match(pattern), null, 2);
   } catch (error) {
-    _6.value = error.toString();
+    $('_6').value = error.toString();
   }
 }
 
-_66(_1);
+[$('_1'), $('_5')].forEach(_ =>
+  _?.addEventListener('keyup', () => {
+    _1();
+    _2();
+  })
+);
 
-_1.addEventListener('keyup', e => {
-  _66(e.target);
-  _77(_5);
-});
-
-_5.addEventListener('keyup', e => _77(e.target));
-
-_77(_5);
+_1();
+_2();

@@ -41,16 +41,12 @@ function urlToRegExp(path: string): RegExp {
 
   $ += '$';
 
-  const lol = new RegExp($);
+  const _3 = new RegExp($);
 
-  Object.assign(RegExp.prototype, {
-    lexer: _1,
-    parser: _2,
-  });
+  _3.lexer = _1;
+  _3.parser = _2;
 
-  return new RegExp(lol);
+  return _3;
 }
-
-globalThis.urlToRegExp = urlToRegExp;
 
 export default urlToRegExp;

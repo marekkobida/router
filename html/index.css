@@ -8,7 +8,9 @@ body {
 }
 
 textarea {
-  border: 0.25rem solid #808080;
+  background-color: #fff;
+  border: 0.125rem solid rgba(0, 0, 0, 0.25);
+  color: #000;
   display: block;
   font-family: "SF Mono";
   font-size: 1rem;
@@ -24,7 +26,12 @@ textarea:focus {
 
 #_1,
 #_5 {
-  border-color: #000;
+  border-color: rgba(0, 0, 0, 0.75);
+}
+
+#_1:focus,
+#_5:focus {
+  border-color: rgba(0, 0, 255, 0.75);
 }
 
 #_1,
