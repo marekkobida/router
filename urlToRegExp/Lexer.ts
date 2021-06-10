@@ -57,11 +57,6 @@ class Lexer {
         continue;
       }
 
-      if (currentCharacter === '*' || currentCharacter === '+' || currentCharacter === '?') {
-        this.#addToken('MODIFIER', this.#currentIndex, input[this.#currentIndex++]);
-        continue;
-      }
-
       if (currentCharacter === ':') {
         let j = this.#currentIndex + 1;
         let parameterName = '';
@@ -81,6 +76,11 @@ class Lexer {
         this.#addToken('PARAMETER_NAME', this.#currentIndex, parameterName);
 
         this.#currentIndex = j;
+        continue;
+      }
+
+      if (currentCharacter === '?') {
+        this.#addToken('MODIFIER', this.#currentIndex, input[this.#currentIndex++]);
         continue;
       }
 

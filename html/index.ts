@@ -2,13 +2,13 @@
  * Copyright 2021 Marek Kobida
  */
 
-import urlToRegExp from '../urlToRegExp/index.js';
+import urlToRegExp, { EnhancedRegExp } from '../urlToRegExp/index.js';
 
 function $(elementId: string) {
   return document.getElementById(elementId) as HTMLTextAreaElement;
 }
 
-let pattern = new RegExp('');
+let pattern: EnhancedRegExp;
 
 function _1() {
   try {
