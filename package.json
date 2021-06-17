@@ -1,6 +1,11 @@
 {
   "devDependencies": {
-    "typescript": "^4.3.2"
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "@warden-sk/eslint-config": "file:../eslint-config",
+    "eslint": "^7.28.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "typescript": "^4.3.3"
   },
   "name": "@warden-sk/router",
   "repository": {
