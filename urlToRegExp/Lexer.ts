@@ -4,9 +4,7 @@
 
 class Lexer {
   #PARAMETER_NAME_PATTERN = /^[0-9A-Z_]+$/i;
-
   #currentIndex = 0;
-
   #tokens: Lexer.Token[] = [];
 
   #addToken = (type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] =>
@@ -47,6 +45,7 @@ class Lexer {
           pattern += input[j++];
         }
 
+        // počet zátvoriek musí byť "0"
         if ($) throw new TypeError(`The pattern is not valid at ${this.#currentIndex}.`);
 
         if (!pattern) throw new TypeError(`The pattern is not valid at ${this.#currentIndex}.`);
@@ -67,7 +66,6 @@ class Lexer {
             parameterName += input[j++];
             continue;
           }
-
           break;
         }
 
