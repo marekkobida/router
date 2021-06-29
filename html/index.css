@@ -1,34 +1,28 @@
 * {
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
 body {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   margin: 0;
 }
 
 body > div {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
   flex-direction: column;
   height: 100vh;
   width: 50vw;
 }
 
 textarea {
+  -webkit-font-smoothing: antialiased;
   background-color: #fff;
   border: 0.125rem solid rgba(0, 0, 0, 0.25);
   color: #000;
   display: block;
   font-family: "SF Mono";
   font-size: 1rem;
+  font-weight: 300;
   line-height: 1.25;
   padding: 1rem;
   resize: none;
@@ -51,7 +45,5 @@ textarea:focus {
 #_3,
 #_4,
 #_6 {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
   flex: 1;
 }
