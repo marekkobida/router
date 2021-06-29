@@ -3,35 +3,38 @@
  */
 
 class Lexer {
-  #PARAMETER_NAME_PATTERN = /^[0-9A-Z_]+$/i;
-  #currentIndex = 0;
-  #tokens: Lexer.Token[] = [];
+  PARAMETER_NAME_PATTERN = /^[0-9A-Z_]+$/i;
+  /**
+   * Current Index
+   */
+  i = 0;
+  tokens: Lexer.Token[] = [];
 
-  #addToken = (type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] =>
-    (this.#tokens = [...this.#tokens, { atIndex, index, type }]);
+  addToken = (type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] =>
+    (this.tokens = [...this.tokens, { atIndex, index, type }]);
 
   test(input: string): Lexer.Token[] {
-    while (this.#currentIndex < input.length) {
-      const currentCharacter = input[this.#currentIndex];
+    while (this.i < input.length) {
+      const currentCharacter = input[this.i];
 
       if (currentCharacter === '(') {
-        let $ = 1; // počet zátvoriek
-        let j = this.#currentIndex + 1;
+        let j = this.i + 1;
+        let parenthesisCount = 1;
         let pattern = '';
 
         if (input[j] === '?') throw new TypeError(`The "?" is not allowed at ${j}.`);
 
         while (j < input.length) {
           if (input[j] === '(') {
-            $++;
+            parenthesisCount++;
 
             if (input[j + 1] !== '?') throw new TypeError(`The "${input[j + 1]}" is not allowed at ${j + 1}.`);
           }
 
           if (input[j] === ')') {
-            $--;
+            parenthesisCount--;
 
-            if ($ === 0) {
+            if (parenthesisCount === 0) {
               j++;
               break;
             }
@@ -45,54 +48,52 @@ class Lexer {
           pattern += input[j++];
         }
 
-        // počet zátvoriek musí byť "0"
-        if ($) throw new TypeError(`The pattern is not valid at ${this.#currentIndex}.`);
+        if (parenthesisCount) throw new TypeError(`The pattern is not valid at ${this.i}.`);
 
-        if (!pattern) throw new TypeError(`The pattern is not valid at ${this.#currentIndex}.`);
+        if (!pattern) throw new TypeError(`The pattern is not valid at ${this.i}.`);
 
-        this.#addToken('PATTERN', this.#currentIndex, pattern);
+        this.addToken('PATTERN', this.i, pattern);
 
-        this.#currentIndex = j;
+        this.i = j;
         continue;
       }
 
       if (currentCharacter === ':') {
-        let j = this.#currentIndex + 1;
+        let j = this.i + 1;
         let parameterName = '';
 
         while (j < input.length) {
-          // nahradiť RegExp
-          if (this.#PARAMETER_NAME_PATTERN.test(input[j])) {
+          if (this.PARAMETER_NAME_PATTERN.test(input[j])) {
             parameterName += input[j++];
             continue;
           }
           break;
         }
 
-        if (!parameterName) throw new TypeError(`The parameter name is not valid at ${this.#currentIndex}.`);
+        if (!parameterName) throw new TypeError(`The parameter name is not valid at ${this.i}.`);
 
-        this.#addToken('PARAMETER_NAME', this.#currentIndex, parameterName);
+        this.addToken('PARAMETER_NAME', this.i, parameterName);
 
-        this.#currentIndex = j;
+        this.i = j;
         continue;
       }
 
       if (currentCharacter === '?') {
-        this.#addToken('MODIFIER', this.#currentIndex, input[this.#currentIndex++]);
+        this.addToken('MODIFIER', this.i, input[this.i++]);
         continue;
       }
 
       if (currentCharacter === '\\') {
-        this.#addToken('ESCAPED_CHARACTER', this.#currentIndex++, input[this.#currentIndex++]);
+        this.addToken('ESCAPED_CHARACTER', this.i++, input[this.i++]);
         continue;
       }
 
-      this.#addToken('CHARACTER', this.#currentIndex, input[this.#currentIndex++]);
+      this.addToken('CHARACTER', this.i, input[this.i++]);
     }
 
-    this.#addToken('END', this.#currentIndex, '');
+    this.addToken('END', this.i, '');
 
-    return this.#tokens;
+    return this.tokens;
   }
 }
 
