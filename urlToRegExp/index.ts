@@ -5,26 +5,17 @@
 import Lexer from './Lexer.js';
 import Parser from './Parser.js';
 
-export class EnhancedRegExp extends RegExp {
-  lexer?: Lexer.Token[] = [];
-
-  parser?: (Parser.Token | string)[] = [];
-}
-
-function urlToRegExp(url: string): EnhancedRegExp {
+function urlToRegExp(url: string): RegExp {
   const lexer = new Lexer();
-
-  const _1 = lexer.test(url);
-
   const parser = new Parser();
 
-  const _2 = parser.test(_1);
+  const tokens = parser.test(lexer.test(url));
 
   let $ = '';
 
   $ += '^';
 
-  for (const token of _2) {
+  for (const token of tokens) {
     if (typeof token === 'string') {
       $ += token;
     } else {
@@ -42,12 +33,7 @@ function urlToRegExp(url: string): EnhancedRegExp {
 
   $ += '$';
 
-  const _3 = new EnhancedRegExp($);
-
-  _3.lexer = _1;
-  _3.parser = _2;
-
-  return _3;
+  return new RegExp($);
 }
 
 export default urlToRegExp;

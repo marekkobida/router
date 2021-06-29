@@ -5,7 +5,7 @@
 import Lexer from './Lexer.js';
 
 class Parser {
-  #i = 0;
+  #currentIndex = 0;
 
   #j = 0;
 
@@ -13,10 +13,11 @@ class Parser {
 
   test(tokens: Lexer.Token[]): (Parser.Token | string)[] {
     const test = (type: Lexer.Token['type']): string | undefined => {
-      if (this.#i < tokens.length && tokens[this.#i].type === type) return tokens[this.#i++].atIndex;
+      if (this.#currentIndex < tokens.length && tokens[this.#currentIndex].type === type)
+        return tokens[this.#currentIndex++].atIndex;
     };
 
-    while (this.#i < tokens.length) {
+    while (this.#currentIndex < tokens.length) {
       const character = test('CHARACTER');
       const parameterName = test('PARAMETER_NAME');
       const pattern = test('PATTERN');
@@ -41,7 +42,7 @@ class Parser {
       const endToken = test('END');
 
       if (typeof endToken === 'undefined') {
-        const { index, type } = tokens[this.#i];
+        const { index, type } = tokens[this.#currentIndex];
 
         throw new TypeError(`Unexpected type "${type}" at ${index}.`);
       }
