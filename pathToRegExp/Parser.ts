@@ -37,13 +37,7 @@ class Parser {
         continue;
       }
 
-      const endToken = test('END');
-
-      if (typeof endToken === 'undefined') {
-        const { index, type } = tokens[this.i];
-
-        throw new TypeError(`Unexpected type "${type}" at ${index}.`);
-      }
+      test('END');
     }
 
     return this.tokens;
