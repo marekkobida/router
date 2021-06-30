@@ -4,9 +4,7 @@
 
 class Lexer {
   PARAMETER_NAME_PATTERN = /^[0-9A-Z_]+$/i;
-  /**
-   * Current Index
-   */
+  /** Current Index */
   i = 0;
   tokens: Lexer.Token[] = [];
 

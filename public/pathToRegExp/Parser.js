@@ -2,9 +2,7 @@
  * Copyright 2021 Marek Kobida
  */
 class Parser {
-    /**
-     * Current Index
-     */
+    /** Current Index */
     i = 0;
     j = 0;
     tokens = [];

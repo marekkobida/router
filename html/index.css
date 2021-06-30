@@ -6,12 +6,16 @@ body {
   display: flex;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 0;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 body > div {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   width: 50vw;
 }
 
@@ -46,8 +50,8 @@ textarea:focus {
   border-color: #00f;
 }
 
+#_1,
 #_2,
-#_3,
-#_4 {
+#_3 {
   flex: 1;
 }

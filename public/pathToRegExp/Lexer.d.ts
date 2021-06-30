@@ -1,8 +1,6 @@
 declare class Lexer {
     PARAMETER_NAME_PATTERN: RegExp;
-    /**
-     * Current Index
-     */
+    /** Current Index */
     i: number;
     tokens: Lexer.Token[];
     addToken: (type: Lexer.Token['type'], index: number, atIndex: string) => Lexer.Token[];

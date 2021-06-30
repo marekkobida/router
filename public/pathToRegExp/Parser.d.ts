@@ -1,8 +1,6 @@
 import Lexer from './Lexer.js';
 declare class Parser {
-    /**
-     * Current Index
-     */
+    /** Current Index */
     i: number;
     j: number;
     tokens: (Parser.Token | string)[];

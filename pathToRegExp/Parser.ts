@@ -5,9 +5,7 @@
 import Lexer from './Lexer.js';
 
 class Parser {
-  /**
-   * Current Index
-   */
+  /** Current Index */
   i = 0;
   j = 0;
   tokens: (Parser.Token | string)[] = [];
