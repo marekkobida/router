@@ -10,31 +10,29 @@ function $(elementId) {
 let pattern;
 function _1() {
     try {
-        const lexer = new Lexer();
-        const parser = new Parser();
-        const v = $('path').value;
-        pattern = pathToRegExp(v);
-        const l = lexer.test(v);
-        const p = parser.test(l);
-        $('_2').value = pattern.toString();
-        $('_3').value = JSON.stringify(l, null, 2);
-        $('_4').value = JSON.stringify(p, null, 2);
+        const _3 = $('path').value;
+        pattern = pathToRegExp(_3);
+        const _4 = new Lexer().test(_3);
+        const _5 = new Parser().test(_4);
+        $('_1').value = pattern.toString();
+        $('_2').value = JSON.stringify(_4, null, 2);
+        $('_3').value = JSON.stringify(_5, null, 2);
     }
     catch (error) {
+        $('_1').value = '';
         $('_2').value = '';
-        $('_3').value = '';
-        $('_4').value = error.toString();
+        $('_3').value = error.toString();
     }
 }
 function _2() {
     try {
-        $('_6').value = JSON.stringify(pattern.exec($('_5').value), null, 2);
+        $('_4').value = JSON.stringify(pattern.exec($('url').value), null, 2);
     }
     catch (error) {
-        $('_6').value = error.toString();
+        $('_4').value = error.toString();
     }
 }
-[$('path'), $('_5')].forEach(_ => _?.addEventListener('keyup', () => {
+[$('path'), $('url')].forEach(_ => _?.addEventListener('keyup', () => {
     _1();
     _2();
 }));
