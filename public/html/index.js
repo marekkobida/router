@@ -10,18 +10,18 @@ function $(elementId) {
 let pattern;
 function _1() {
     try {
-        const _3 = $('path').value;
-        pattern = pathToRegExp(_3);
-        const _4 = new Lexer().test(_3);
-        const _5 = new Parser().test(_4);
-        $('_1').value = pattern.toString();
-        $('_2').value = JSON.stringify(_4, null, 2);
-        $('_3').value = JSON.stringify(_5, null, 2);
+        const _4 = $('path').value;
+        pattern = pathToRegExp(_4);
+        const _5 = new Lexer().test(_4);
+        const _6 = new Parser().test(_5);
+        $('_2').value = JSON.stringify(_5, null, 2);
+        $('_3').value = JSON.stringify(_6, null, 2);
+        $('pattern').value = pattern.toString();
     }
     catch (error) {
-        $('_1').value = '';
-        $('_2').value = '';
-        $('_3').value = error.toString();
+        $('_2').value = error.toString();
+        $('_3').value = '';
+        $('pattern').value = '';
     }
 }
 function _2() {
@@ -32,9 +32,9 @@ function _2() {
         $('_4').value = error.toString();
     }
 }
-[$('path'), $('url')].forEach(_ => _?.addEventListener('keyup', () => {
+function _3() {
     _1();
     _2();
-}));
-_1();
-_2();
+}
+[$('path'), $('url')].forEach(_ => _.addEventListener('keyup', _3));
+_3();
