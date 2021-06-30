@@ -32,18 +32,18 @@ textarea:focus {
   outline: 0;
 }
 
-#_1,
-#_5 {
+#path,
+#url {
   border-color: rgba(0, 0, 0, 0.75);
 }
 
-#_1:focus,
-#_5:focus {
+#path:focus,
+#url:focus {
   border-color: rgba(0, 0, 255, 0.75);
 }
 
+#_2,
 #_3,
-#_4,
-#_6 {
+#_4 {
   flex: 1;
 }
