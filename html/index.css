@@ -4,6 +4,7 @@
 
 body {
   display: flex;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 0;
 }
 
@@ -14,10 +15,13 @@ body > div {
   width: 50vw;
 }
 
+label {
+  padding: 0.5rem 1rem;
+}
+
 textarea {
-  -webkit-font-smoothing: antialiased;
   background-color: #fff;
-  border: 0.125rem solid rgba(0, 0, 0, 0.25);
+  border: 0.125rem solid #c0c0c0;
   color: #000;
   display: block;
   font-family: "SF Mono";
@@ -34,12 +38,12 @@ textarea:focus {
 
 #path,
 #url {
-  border-color: rgba(0, 0, 0, 0.75);
+  border-color: #808080;
 }
 
 #path:focus,
 #url:focus {
-  border-color: rgba(0, 0, 255, 0.75);
+  border-color: #00f;
 }
 
 #_2,
