@@ -2,14 +2,11 @@
  * Copyright 2021 Marek Kobida
  */
 
-import Lexer from '../urlToRegExp/Lexer.js';
-import Parser from '../urlToRegExp/Parser.js';
-import urlToRegExp from '../urlToRegExp/index.js';
+import Lexer from '../pathToRegExp/Lexer.js';
+import Parser from '../pathToRegExp/Parser.js';
+import pathToRegExp from '../pathToRegExp/index.js';
 
-const lexer = new Lexer();
-const parser = new Parser();
-
-function $(elementId: string) {
+function $(elementId: string): HTMLTextAreaElement {
   return document.getElementById(elementId) as HTMLTextAreaElement;
 }
 
@@ -17,9 +14,12 @@ let pattern: RegExp;
 
 function _1() {
   try {
-    const v = $('_1').value;
+    const lexer = new Lexer();
+    const parser = new Parser();
 
-    pattern = urlToRegExp(v);
+    const v = $('path').value;
+
+    pattern = pathToRegExp(v);
 
     const l = lexer.test(v);
     const p = parser.test(l);
@@ -42,7 +42,7 @@ function _2() {
   }
 }
 
-[$('_1'), $('_5')].forEach(_ =>
+[$('path'), $('_5')].forEach(_ =>
   _?.addEventListener('keyup', () => {
     _1();
     _2();

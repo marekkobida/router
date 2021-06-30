@@ -1,14 +1,14 @@
 /*
  * Copyright 2021 Marek Kobida
  */
-import urlToRegExp from './urlToRegExp/index.js';
+import pathToRegExp from './pathToRegExp/index.js';
 class Route {
     #children = [];
     #context;
     #url;
     constructor(url, context = {}) {
         this.#context = context;
-        this.#url = [url, urlToRegExp(url)];
+        this.#url = [url, pathToRegExp(url)];
     }
     addChild(method, ...afterTest) {
         this.#children.push([method, afterTest.flat(Infinity)]);

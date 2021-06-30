@@ -1,19 +1,19 @@
 /*
  * Copyright 2021 Marek Kobida
  */
-import Lexer from '../urlToRegExp/Lexer.js';
-import Parser from '../urlToRegExp/Parser.js';
-import urlToRegExp from '../urlToRegExp/index.js';
-const lexer = new Lexer();
-const parser = new Parser();
+import Lexer from '../pathToRegExp/Lexer.js';
+import Parser from '../pathToRegExp/Parser.js';
+import pathToRegExp from '../pathToRegExp/index.js';
 function $(elementId) {
     return document.getElementById(elementId);
 }
 let pattern;
 function _1() {
     try {
-        const v = $('_1').value;
-        pattern = urlToRegExp(v);
+        const lexer = new Lexer();
+        const parser = new Parser();
+        const v = $('path').value;
+        pattern = pathToRegExp(v);
         const l = lexer.test(v);
         const p = parser.test(l);
         $('_2').value = pattern.toString();
@@ -34,7 +34,7 @@ function _2() {
         $('_6').value = error.toString();
     }
 }
-[$('_1'), $('_5')].forEach(_ => _?.addEventListener('keyup', () => {
+[$('path'), $('_5')].forEach(_ => _?.addEventListener('keyup', () => {
     _1();
     _2();
 }));
