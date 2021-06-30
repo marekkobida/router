@@ -19,14 +19,10 @@ function pathToRegExp(path: string): RegExp {
     if (typeof token === 'string') {
       $ += token;
     } else {
-      if (token.pattern) {
-        if (token.prefix) {
-          $ += `(?:${token.prefix}(${token.pattern}))${token.modifier}`;
-        } else {
-          $ += `(${token.pattern})${token.modifier}`;
-        }
+      if (token.prefix) {
+        $ += `(?:${token.prefix}(${token.pattern}))${token.modifier}`;
       } else {
-        $ += `(?:${token.prefix})${token.modifier}`;
+        $ += `(${token.pattern})${token.modifier}`;
       }
     }
   }

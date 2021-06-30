@@ -3,6 +3,7 @@
 }
 
 body {
+  color: #202020;
   display: flex;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 0;
@@ -20,13 +21,12 @@ body > div {
 }
 
 label {
-  padding: 0.5rem 1rem;
+  padding: 1rem;
 }
 
 textarea {
-  background-color: #fff;
-  border: 0.125rem solid #c0c0c0;
-  color: #000;
+  border: 0.125rem solid #e0e0e0;
+  color: inherit;
   display: block;
   font-family: "SF Mono";
   font-size: 1rem;
@@ -42,12 +42,12 @@ textarea:focus {
 
 #path,
 #url {
-  border-color: #ff8040;
+  border-color: #4080ff;
 }
 
 #path:focus,
 #url:focus {
-  box-shadow: 0 0 0.25rem 0.125rem rgb(255, 128, 64, 0.5);
+  box-shadow: 0 0 0.5rem rgb(64, 128, 255, 0.5);
 }
 
 #_1,

@@ -33,7 +33,9 @@ function _1() {
 
 function _2() {
   try {
-    $('_3').value = JSON.stringify(pattern.exec($('url').value), null, 2);
+    const [, ...parameters] = pattern.exec($('url').value) || [];
+
+    $('_3').value = JSON.stringify(parameters, null, 2);
   } catch (error) {
     $('_3').value = error.toString();
   }
