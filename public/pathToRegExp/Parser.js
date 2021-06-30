@@ -1,30 +1,33 @@
 /*
  * Copyright 2021 Marek Kobida
  */
-class Parser {
-    /** Current Index */
-    i = 0;
-    j = 0;
-    tokens = [];
-    test(tokens) {
-        const test = (type) => {
-            if (this.i < tokens.length && tokens[this.i].type === type)
-                return tokens[this.i++].atIndex;
+var Parser = /** @class */ (function () {
+    function Parser() {
+        /** Current Index */
+        this.i = 0;
+        this.j = 0;
+        this.tokens = [];
+    }
+    Parser.prototype.test = function (tokens) {
+        var _this = this;
+        var test = function (type) {
+            if (_this.i < tokens.length && tokens[_this.i].type === type)
+                return tokens[_this.i++].atIndex;
         };
         while (this.i < tokens.length) {
-            const character = test('CHARACTER');
-            const parameterName = test('PARAMETER_NAME');
-            const pattern = test('PATTERN');
+            var character = test('CHARACTER');
+            var parameterName = test('PARAMETER_NAME');
+            var pattern = test('PATTERN');
             if (parameterName || pattern) {
                 this.tokens.push({
                     modifier: test('MODIFIER') || '',
                     parameterName: parameterName || this.j++,
                     pattern: pattern || '[^#/?]+',
-                    prefix: character || '',
+                    prefix: character || ''
                 });
                 continue;
             }
-            const $ = character || test('ESCAPED_CHARACTER');
+            var $ = character || test('ESCAPED_CHARACTER');
             if ($) {
                 this.tokens.push($);
                 continue;
@@ -32,6 +35,7 @@ class Parser {
             test('END');
         }
         return this.tokens;
-    }
-}
+    };
+    return Parser;
+}());
 export default Parser;

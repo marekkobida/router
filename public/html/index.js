@@ -9,11 +9,11 @@ function $(elementId) {
 }
 function _1() {
     try {
-        const path = $('path').value;
-        const url = $('url').value;
-        const pattern = pathToRegExp(path);
-        const _2 = new Lexer().test(path);
-        const _3 = new Parser().test(_2);
+        var path = $('path').value;
+        var url = $('url').value;
+        var pattern = pathToRegExp(path);
+        var _2 = new Lexer().test(path);
+        var _3 = new Parser().test(_2);
         $('_1').value = JSON.stringify(_2, null, 2);
         $('_2').value = JSON.stringify(_3, null, 2);
         $('parameters').value = JSON.stringify(pattern.exec(url), null, 2);
@@ -26,6 +26,6 @@ function _1() {
         $('pattern').value = error;
     }
 }
-const elements = [$('path'), $('url')];
-elements.forEach(element => element.addEventListener('keyup', _1));
+var elements = [$('path'), $('url')];
+elements.forEach(function (element) { return element.addEventListener('keyup', _1); });
 _1();
