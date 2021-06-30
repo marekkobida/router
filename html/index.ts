@@ -10,40 +10,30 @@ function $(elementId: string): HTMLTextAreaElement {
   return document.getElementById(elementId) as HTMLTextAreaElement;
 }
 
-let pattern: RegExp;
-
 function _1() {
   try {
-    const _4 = $('path').value;
+    const path = $('path').value;
+    const url = $('url').value;
 
-    pattern = pathToRegExp(_4);
+    const pattern = pathToRegExp(path);
 
-    const _5 = new Lexer().test(_4);
-    const _6 = new Parser().test(_5);
+    const _2 = new Lexer().test(path);
+    const _3 = new Parser().test(_2);
 
-    $('_1').value = JSON.stringify(_5, null, 2);
-    $('_2').value = JSON.stringify(_6, null, 2);
+    $('_1').value = JSON.stringify(_2, null, 2);
+    $('_2').value = JSON.stringify(_3, null, 2);
+    $('parameters').value = JSON.stringify(pattern.exec(url), null, 2);
     $('pattern').value = pattern.toString();
   } catch (error) {
-    $('_1').value = error.toString();
-    $('_2').value = '';
-    $('pattern').value = '';
+    $('_1').value = error;
+    $('_2').value = error;
+    $('parameters').value = error;
+    $('pattern').value = error;
   }
 }
 
-function _2() {
-  try {
-    $('_3').value = JSON.stringify(pattern.exec($('url').value), null, 2);
-  } catch (error) {
-    $('_3').value = error.toString();
-  }
-}
+const elements = [$('path'), $('url')];
 
-function _3() {
-  _1();
-  _2();
-}
+elements.forEach(element => element.addEventListener('keyup', _1));
 
-[$('path'), $('url')].forEach(_ => _.addEventListener('keyup', _3));
-
-_3();
+_1();
