@@ -1,36 +1,26 @@
 /*
  * Copyright 2021 Marek Kobida
  */
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
-};
-var Lexer = /** @class */ (function () {
-    function Lexer() {
-        var _this = this;
-        this.PARAMETER_NAME_PATTERN = /^[0-9A-Z_]+$/i;
-        /** Current Index */
-        this.i = 0;
-        this.tokens = [];
-        this.addToken = function (type, index, atIndex) {
-            return (_this.tokens = __spreadArray(__spreadArray([], _this.tokens), [{ atIndex: atIndex, index: index, type: type }]));
-        };
-    }
-    Lexer.prototype.test = function (input) {
+class Lexer {
+    PARAMETER_NAME_PATTERN = /^[0-9A-Z_]+$/i;
+    /** Current Index */
+    i = 0;
+    tokens = [];
+    addToken = (type, index, atIndex) => this.tokens.push({ atIndex, index, type });
+    test(input) {
         while (this.i < input.length) {
-            var currentCharacter = input[this.i];
+            const currentCharacter = input[this.i];
             if (currentCharacter === '(') {
-                var j = this.i + 1;
-                var parenthesisCount = 1;
-                var pattern = '';
+                let j = this.i + 1;
+                let parenthesisCount = 1;
+                let pattern = '';
                 if (input[j] === '?')
-                    throw new TypeError("The \"?\" is not allowed at " + j + ".");
+                    throw new TypeError(`The "?" is not allowed at ${j}.`);
                 while (j < input.length) {
                     if (input[j] === '(') {
                         parenthesisCount++;
                         if (input[j + 1] !== '?')
-                            throw new TypeError("The \"" + input[j + 1] + "\" is not allowed at " + (j + 1) + ".");
+                            throw new TypeError(`The "${input[j + 1]}" is not allowed at ${j + 1}.`);
                     }
                     if (input[j] === ')') {
                         parenthesisCount--;
@@ -46,16 +36,16 @@ var Lexer = /** @class */ (function () {
                     pattern += input[j++];
                 }
                 if (parenthesisCount)
-                    throw new TypeError("The pattern is not valid at " + this.i + ".");
+                    throw new TypeError(`The pattern is not valid at ${this.i}.`);
                 if (!pattern)
-                    throw new TypeError("The pattern is not valid at " + this.i + ".");
+                    throw new TypeError(`The pattern is not valid at ${this.i}.`);
                 this.addToken('PATTERN', this.i, pattern);
                 this.i = j;
                 continue;
             }
             if (currentCharacter === ':') {
-                var j = this.i + 1;
-                var parameterName = '';
+                let j = this.i + 1;
+                let parameterName = '';
                 while (j < input.length) {
                     if (this.PARAMETER_NAME_PATTERN.test(input[j])) {
                         parameterName += input[j++];
@@ -64,7 +54,7 @@ var Lexer = /** @class */ (function () {
                     break;
                 }
                 if (!parameterName)
-                    throw new TypeError("The parameter name is not valid at " + this.i + ".");
+                    throw new TypeError(`The parameter name is not valid at ${this.i}.`);
                 this.addToken('PARAMETER_NAME', this.i, parameterName);
                 this.i = j;
                 continue;
@@ -81,7 +71,6 @@ var Lexer = /** @class */ (function () {
         }
         this.addToken('END', this.i, '');
         return this.tokens;
-    };
-    return Lexer;
-}());
+    }
+}
 export default Lexer;

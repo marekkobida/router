@@ -4,22 +4,21 @@
 import Lexer from './Lexer.js';
 import Parser from './Parser.js';
 function pathToRegExp(path) {
-    var lexer = new Lexer();
-    var parser = new Parser();
-    var tokens = parser.test(lexer.test(path));
-    var $ = '';
+    const lexer = new Lexer();
+    const parser = new Parser();
+    const tokens = parser.test(lexer.test(path));
+    let $ = '';
     $ += '^';
-    for (var _i = 0, tokens_1 = tokens; _i < tokens_1.length; _i++) {
-        var token = tokens_1[_i];
+    for (const token of tokens) {
         if (typeof token === 'string') {
             $ += token;
         }
         else {
             if (token.prefix) {
-                $ += "(?:" + token.prefix + "(" + token.pattern + "))" + token.modifier;
+                $ += `(?:${token.prefix}(${token.pattern}))${token.modifier}`;
             }
             else {
-                $ += "(" + token.pattern + ")" + token.modifier;
+                $ += `(${token.pattern})${token.modifier}`;
             }
         }
     }

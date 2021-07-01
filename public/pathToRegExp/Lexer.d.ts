@@ -3,7 +3,7 @@ declare class Lexer {
     /** Current Index */
     i: number;
     tokens: Lexer.Token[];
-    addToken: (type: Lexer.Token['type'], index: number, atIndex: string) => Lexer.Token[];
+    addToken: (type: Lexer.Token['type'], index: number, atIndex: string) => number;
     test(input: string): Lexer.Token[];
 }
 declare namespace Lexer {

@@ -8,8 +8,7 @@ class Lexer {
   i = 0;
   tokens: Lexer.Token[] = [];
 
-  addToken = (type: Lexer.Token['type'], index: number, atIndex: string): Lexer.Token[] =>
-    (this.tokens = [...this.tokens, { atIndex, index, type }]);
+  addToken = (type: Lexer.Token['type'], index: number, atIndex: string) => this.tokens.push({ atIndex, index, type });
 
   test(input: string): Lexer.Token[] {
     while (this.i < input.length) {

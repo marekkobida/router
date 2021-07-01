@@ -5,6 +5,7 @@
     "esModuleInterop": true,
     "module": "ESNext",
     "outDir": "./public",
-    "strict": true
+    "strict": true,
+    "target": "ESNext"
   }
 }
