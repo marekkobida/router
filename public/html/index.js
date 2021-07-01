@@ -9,10 +9,10 @@ function $(id) {
 }
 function _1() {
     try {
-        var path = $('path').value, _2 = new Lexer().test(path), _3 = new Parser().test(_2), pattern = pathToRegExp(path), url = $('url').value;
+        var path = $('path').value, _2 = new Lexer().test(path), _3 = new Parser().test(_2), pattern = pathToRegExp(path), url = $('url').value, parameters = pattern.exec(url);
         $('_1').value = JSON.stringify(_2, null, 2);
         $('_2').value = JSON.stringify(_3, null, 2);
-        $('parameters').value = JSON.stringify(pattern.exec(url), null, 2);
+        $('parameters').value = JSON.stringify(parameters, null, 2);
         $('pattern').value = pattern.toString();
     }
     catch (error) {
