@@ -5,7 +5,7 @@
     "@warden-sk/eslint-config": "file:../eslint-config",
     "eslint": "^7.29.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.5"
   },
   "name": "@warden-sk/router",
   "repository": {
