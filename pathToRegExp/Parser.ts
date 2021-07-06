@@ -12,7 +12,7 @@ class Parser {
 
   test(tokens: Lexer.Token[]): (Parser.Token | string)[] {
     const test = (type: Lexer.Token['type']): string | undefined => {
-      if (this.i < tokens.length && tokens[this.i].type === type) return tokens[this.i++].atIndex;
+      if (type === tokens[this.i].type) return tokens[this.i++].atIndex;
     };
 
     while (this.i < tokens.length) {
@@ -37,7 +37,9 @@ class Parser {
         continue;
       }
 
-      test('END');
+      const end = test('END');
+
+      if (end === undefined) throw new TypeError(`${tokens[this.i].type} at ${this.i}`);
     }
 
     return this.tokens;

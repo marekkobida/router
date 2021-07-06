@@ -8,7 +8,7 @@ class Parser {
     tokens = [];
     test(tokens) {
         const test = (type) => {
-            if (this.i < tokens.length && tokens[this.i].type === type)
+            if (type === tokens[this.i].type)
                 return tokens[this.i++].atIndex;
         };
         while (this.i < tokens.length) {
@@ -29,7 +29,9 @@ class Parser {
                 this.tokens.push($);
                 continue;
             }
-            test('END');
+            const end = test('END');
+            if (end === undefined)
+                throw new TypeError(`${tokens[this.i].type} at ${this.i}`);
         }
         return this.tokens;
     }

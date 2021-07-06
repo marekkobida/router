@@ -5,7 +5,6 @@ import Lexer from './Lexer.js';
 import Parser from './Parser.js';
 function pathToRegExp(path) {
     const lexer = new Lexer(), parser = new Parser();
-    const suffix = '[#/?]?';
     const tokens = parser.test(lexer.test(path));
     let pattern = '';
     pattern += '^';
@@ -22,8 +21,8 @@ function pathToRegExp(path) {
             }
         }
     }
-    pattern += suffix;
+    pattern += '[#/?]?';
     pattern += '$';
-    return new RegExp(pattern);
+    return new RegExp(pattern, 'i');
 }
 export default pathToRegExp;

@@ -3,6 +3,11 @@ declare class Lexer {
     /** Current Index */
     i: number;
     tokens: Lexer.Token[];
+    messages: {
+        CHARACTER_NOT_ALLOWED: (character: string, i: number) => string;
+        PARAMETER_NAME_NOT_VALID: (i: number) => string;
+        PATTERN_NOT_VALID: (i: number) => string;
+    };
     addToken: (type: Lexer.Token['type'], index: number, atIndex: string) => number;
     test(input: string): Lexer.Token[];
 }

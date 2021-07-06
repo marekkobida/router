@@ -1,7 +1,7 @@
 {
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
-    "@typescript-eslint/parser": "^4.28.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
     "@warden-sk/eslint-config": "github:warden-sk/eslint-config",
     "eslint": "^7.30.0",
     "eslint-plugin-prettier": "^3.4.0",
@@ -13,5 +13,5 @@
     "url": "https://github.com/warden-sk/router.git"
   },
   "type": "module",
-  "version": "2.2.0"
+  "version": "3.0.0"
 }
