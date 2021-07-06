@@ -9,8 +9,6 @@ function pathToRegExp(path: string): RegExp {
   const lexer = new Lexer(),
     parser = new Parser();
 
-  const suffix = '[#/?]?';
-
   const tokens = parser.test(lexer.test(path));
 
   let pattern = '';
@@ -29,11 +27,11 @@ function pathToRegExp(path: string): RegExp {
     }
   }
 
-  pattern += suffix;
+  pattern += '[#/?]?';
 
   pattern += '$';
 
-  return new RegExp(pattern);
+  return new RegExp(pattern, 'i');
 }
 
 export default pathToRegExp;
