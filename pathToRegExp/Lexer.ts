@@ -8,6 +8,12 @@ class Lexer {
   i = 0;
   tokens: Lexer.Token[] = [];
 
+  messages = {
+    CHARACTER_NOT_ALLOWED: (character: string, i: number) => `The "${character}" is not allowed at ${i}.`,
+    PARAMETER_NAME_NOT_VALID: (i: number) => `The parameter name is not valid at ${i}.`,
+    PATTERN_NOT_VALID: (i: number) => `The pattern is not valid at ${i}.`,
+  };
+
   addToken = (type: Lexer.Token['type'], index: number, atIndex: string) => this.tokens.push({ atIndex, index, type });
 
   test(input: string): Lexer.Token[] {
@@ -19,13 +25,13 @@ class Lexer {
         let parenthesisCount = 1;
         let pattern = '';
 
-        if (input[j] === '?') throw new TypeError(Lexer.messages.CHARACTER_NOT_ALLOWED('?', j));
+        if (input[j] === '?') throw new TypeError(this.messages.CHARACTER_NOT_ALLOWED('?', j));
 
         while (j < input.length) {
           if (input[j] === '(') {
             parenthesisCount++;
 
-            if (input[j + 1] !== '?') throw new TypeError(Lexer.messages.CHARACTER_NOT_ALLOWED(input[j + 1], j + 1));
+            if (input[j + 1] !== '?') throw new TypeError(this.messages.CHARACTER_NOT_ALLOWED(input[j + 1], j + 1));
           }
 
           if (input[j] === ')') {
@@ -45,9 +51,9 @@ class Lexer {
           pattern += input[j++];
         }
 
-        if (parenthesisCount) throw new TypeError(Lexer.messages.PATTERN_NOT_VALID(this.i));
+        if (parenthesisCount) throw new TypeError(this.messages.PATTERN_NOT_VALID(this.i));
 
-        if (!pattern) throw new TypeError(Lexer.messages.PATTERN_NOT_VALID(this.i));
+        if (!pattern) throw new TypeError(this.messages.PATTERN_NOT_VALID(this.i));
 
         this.addToken('PATTERN', this.i, pattern);
 
@@ -67,7 +73,7 @@ class Lexer {
           break;
         }
 
-        if (!parameterName) throw new TypeError(Lexer.messages.PARAMETER_NAME_NOT_VALID(this.i));
+        if (!parameterName) throw new TypeError(this.messages.PARAMETER_NAME_NOT_VALID(this.i));
 
         this.addToken('PARAMETER_NAME', this.i, parameterName);
 
@@ -100,12 +106,6 @@ namespace Lexer {
     index: number;
     type: 'CHARACTER' | 'END' | 'ESCAPED_CHARACTER' | 'MODIFIER' | 'PARAMETER_NAME' | 'PATTERN';
   }
-
-  export const messages = {
-    CHARACTER_NOT_ALLOWED: (character: string, i: number) => `The "${character}" is not allowed at ${i}.`,
-    PARAMETER_NAME_NOT_VALID: (i: number) => `The parameter name is not valid at ${i}.`,
-    PATTERN_NOT_VALID: (i: number) => `The pattern is not valid at ${i}.`,
-  } as const;
 }
 
 export default Lexer;
